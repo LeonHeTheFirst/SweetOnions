@@ -1,3 +1,6 @@
+#Written by Austin Chu
+#last changed by Austin Chu on April 1st, 2016
+
 import socket
 
 ipList[]
