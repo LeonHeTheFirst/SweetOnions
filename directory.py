@@ -28,4 +28,4 @@ while 1:
     #else it is a node connection, store public key sent from node
     else:
 	    publicKeyList.append(connection.recv[1024])
-	    x++
+	    x += 1
