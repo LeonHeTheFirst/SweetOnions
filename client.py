@@ -1,8 +1,21 @@
+'''
+client.py
+Client should do the following things in order:
+1. Get list of node ip addresses and public keys from directory node
+2. Pick a random ordering of 3 of these nodes
+3. Get user input for info to send
+4. Add encryption layers onto the packet being sent
+5. Send onion packet to first node
+6. Wait on return packet from the server
+7. Compare returned hash to hash of sent packet
+8. Repeat from step 3
+'''
 import socket
 import Crypto
 from Crypto.PublicKey import RSA
 from Crypto import Random
 import ast
+import random
 
 TCP_PORT = 8000
 BUFFER_SIZE = 4096
@@ -26,15 +39,21 @@ for x in dir_arr:
 		in_addr.append(x)
 	else:
 		in_keys.append(x)
-
-for x in range(0,2):
-	pubkeys[x] = in_keys[2-x]
-	node_addr[x+1] = in_addr[2-x]
+i = 0
+for x in random.shuffle(range(0,2)):
+	pubkeys[i] = RSA.importKey(in_keys[x])
+	node_addr[i] = in_addr[x]
+	i+=1
 node_addr[0] = dest_ip
+for x in range(0,2):
+
+	pass
+'''
 def wrap_layers(message, nodes, public_keys):
 	for x in range(0,2):
 		message = message + nodes[x]
-		message = encrypt(message, public_keys[x])
+		message = public_keys[x].encrypt(message, 32)
+'''
 #wrap_layers(MESSAGE)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((node_addr[0], TCP_PORT))
