@@ -1,37 +1,48 @@
-#Written by Austin Chu
-#last changed by Austin Chu on April 1st, 2016
+# Maintain a list of available nodes (Node Name, IP Address, Public Key) for clients
+# to access. Upon request, provide three nodes (entry, onion router, exit) for the client. 
+# This should also be able to communicate with the other available nodes and obtain 
+# their information (i.e. changing public keys, etc.).
 
 import socket
 
-ipList[]
-publicKeyList[]
+NUM_ENTRY = 2
+NUM_EXIT = 2
+NUM_ROUTERS = 5
 
-#create an INET, STREAMing socket
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#bind the socket to a public host,
-# and a port
-serversocket.bind((socket.gethostname(), 1234))
-#become a server socket
-serversocket.listen(5)
+entryRoutersDict = {}
+exitRoutersDict = {}
+onionRoutersDict = {}
 
-#get the public keys from the nodes and store them
-int x = 0
+directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+directoryServer.bind((socket.gethostname(), 80))
+directoryServer.listen(5)
+
+# Begin listening
 while 1:
-    print "Ready to accept connections\n"
-    #accept connections from outside
-    connection, address = serversocket.accept()
+	myClientSocket, myClientAddress = directoryServer.accept()
+	dataReceived = myClientSocket.recv(512)
+	
+	# Initialization: Communicate with all onion routers until all keys are 
+	# stored.	
+	if dataReceived == "Onion Router":
+		onionRoutersDict[myClientAddress] = dataReceived
+		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
+	else if dataReceived == "Entry Router":
+		entryRoutersDict[myClientAddress] = dataReceived
+		print "Entry Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
+	else if dataReceived == "Exit Router":
+		exitRoutersDict[myClientAddress] = dataReceived
+		print "Exit Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 
-    #data recieved from connection
-    data = connection.recv[1024]
-    print "Data recieved\n"
-    #if connection is from client, send IPs and public keys
-    if data == "client":
-        print "Connection to Client, sending IPs and public keys"
-    	toBeSent = ', '.join(i + ', ' + j for i,j in zip(ipList,publicKeyList))
-    		connection.sendall(toBeSent)
+	# Initialization complete. 
+	if dataReceived == "Client Request" and len(onionRoutersDict) == NUM_ROUTERS and len(entryRoutersDict) == NUM_ENTRY and len(exitRoutersDict) == NUM_EXIT:
+		print "Client Request"
+		# Send client data
 
-    #else it is a node connection, store public key sent from node
-    else:
-        print "Connection to node, storing public key"
-	    publicKeyList.append(connection.recv[1024])
-	    x += 1
+
+
+
+
+
+
+
