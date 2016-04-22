@@ -23,7 +23,7 @@ NODES = []
 ##### TALK TO DIR NODE
 #pub = open(public_key_file, "r").read()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((DIR_IP, DIR_PORT))
+s.connect((DIR_IP, DIR_PORT))
 s.send('Onion Router,akjsdhfklajshdkfjash')
 s.close()
 
