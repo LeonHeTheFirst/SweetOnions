@@ -49,7 +49,7 @@ node_addr[0] = dest_ip
 
 def wrap_layers(message, nodes, public_keys):
 	for x in range(0,2):
-		message = nodes[x] + message
+		message = nodes[x] + ',' + message
 		message = public_keys[x].encrypt(message, 32)
 
 wrap_layers(mes, node_addr, pubkeys)
