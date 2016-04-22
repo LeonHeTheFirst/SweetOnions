@@ -22,12 +22,12 @@ DIR_PORT = 1600
 TCP_PORT = 1601
 BUFFER_SIZE = 4096
 DIR_NODE = '127.0.0.1' #change this
-dest_ip = input("Destination Address: ")
-mes =  input("Message: ")
+dest_ip = raw_input("Destination Address: ")
+mes =  raw_input("Message: ")
 mes_hash = hashlib.sha224(mes).hexdigest()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
-s.send('client')
+s.send('Client Request')
 dir_data = s.recv(BUFFER_SIZE)
 s.close()
 
