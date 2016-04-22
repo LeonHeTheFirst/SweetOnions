@@ -30,8 +30,10 @@ while 1:
 	dataReceived = myClientSocket.recv(512)
 	
 	# Initialization: Communicate with all onion routers until all keys are stored.	
-	if dataReceived == "Onion Router":
-		onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived
+	dataReceived = dataReceived.split(",")
+
+	if dataReceived[0] == "Onion Router":
+		onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived[1]
 		routerCount = routerCount + 1
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 
