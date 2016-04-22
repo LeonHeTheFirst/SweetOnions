@@ -21,10 +21,10 @@ BUFFER_SIZE = 20  # Normally 1024, but we want fast response
 NODES = []
 
 ##### TALK TO DIR NODE
-pub = open(public_key_file, "r").read()
+#pub = open(public_key_file, "r").read()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((DIR_IP, DIR_PORT))
-s.send('Onion Router,' + pub)
+s.send('Onion Router,akjsdhfklajshdkfjash')
 s.close()
 
 key = open(private_key_file, "r").read()
