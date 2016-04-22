@@ -11,7 +11,7 @@ import Crypto
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
-DIR_IP = '0.0.0.0'
+DIR_IP = '127.0.0.1'
 DIR_PORT = 1600
 
 TCP_IP = '127.0.0.1'
@@ -64,7 +64,7 @@ while 1:
         
 
 
-conn.close()
+        conn.close()
 
 #if final node case
 #
