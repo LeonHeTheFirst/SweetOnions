@@ -30,12 +30,13 @@ while 1:
 	myClientSocket, myClientAddress = directoryServer.accept()
 	dataReceived = myClientSocket.recv(512)
 	
+	print dataReceived
 	# Initialization: Communicate with all onion routers until all keys are stored.	
-	myData = dataReceived.split(",")
-	if myData[0].strip() == "Onion Router":
-		onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived[1].strip()
-		routerCount = routerCount + 1
-		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
+	#myData = dataReceived.split(",")
+	#if myData[0].strip() == "Onion Router":
+		#onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived[1].strip()
+		#routerCount = routerCount + 1
+		#print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 
 	# Initialization complete. 
 	if dataReceived == "Client Request" and len(onionRoutersDict) == NUM_ROUTERS:
