@@ -16,13 +16,14 @@ from Crypto.PublicKey import RSA
 from Crypto import Random
 import ast
 import random
+import hashlib
 
 TCP_PORT = 8000
 BUFFER_SIZE = 4096
 DIR_NODE = '127.0.0.1' #change this
 dest_ip = input("Destination Address: ")
 mes =  input("Message: ")
-
+mes_hash = hashlib.sha224(mes).hexdigest()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, TCP_PORT))
 s.send('client')
@@ -42,23 +43,23 @@ for x in dir_arr:
 i = 0
 for x in random.shuffle(range(0,2)):
 	pubkeys[i] = RSA.importKey(in_keys[x])
-	node_addr[i] = in_addr[x]
+	node_addr[i+1] = in_addr[x]
 	i+=1
 node_addr[0] = dest_ip
-for x in range(0,2):
 
-	pass
-'''
 def wrap_layers(message, nodes, public_keys):
 	for x in range(0,2):
-		message = message + nodes[x]
+		message = nodes[x] + message
 		message = public_keys[x].encrypt(message, 32)
-'''
-#wrap_layers(MESSAGE)
+
+wrap_layers(mes, node_addr, pubkeys)
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((node_addr[0], TCP_PORT))
+s.connect((node_addr[i], TCP_PORT))
 s.send(mes)
 data = s.recv(BUFFER_SIZE)
 s.close()
-
-print "received data:", data
+if data == mes_hash:
+	print "Received data matches hash:", data
+else
+	print "Received data does not match hash:", data
