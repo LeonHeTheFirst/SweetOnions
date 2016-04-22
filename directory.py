@@ -22,6 +22,7 @@ randomSelection = []
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 directoryServer.bind((socket.gethostname(), 1600))
+print socket.gethostname()
 directoryServer.listen(5)
 
 # Begin listening
@@ -30,10 +31,9 @@ while 1:
 	dataReceived = myClientSocket.recv(512)
 	
 	# Initialization: Communicate with all onion routers until all keys are stored.	
-	dataReceived = dataReceived.split(",")
-
-	if dataReceived[0] == "Onion Router":
-		onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived[1]
+	myData = dataReceived.split(",")
+	if myData[0].strip() == "Onion Router":
+		onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived[1].strip()
 		routerCount = routerCount + 1
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 
