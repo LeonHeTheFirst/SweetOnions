@@ -30,7 +30,7 @@ s.connect((DIR_NODE, DIR_PORT))
 s.send('Client Request')
 dir_data = s.recv(BUFFER_SIZE)
 s.close()
-
+print dir_data
 #parse the directory data string
 #code goes here
 in_keys = []
