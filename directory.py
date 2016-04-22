@@ -21,7 +21,7 @@ onionRoutersDict[4] = "131.175.441.4, 4454jjjj33"
 randomSelection = []
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-directoryServer.bind((socket.gethostname(), 1600)) #'127.0.0.1' for testing
+directoryServer.bind(("127.0.0.1", 1600)) #'127.0.0.1' for testing
 print socket.gethostname()
 directoryServer.listen(5)
 
