@@ -62,5 +62,5 @@ data = s.recv(BUFFER_SIZE)
 s.close()
 if data == mes_hash:
 	print "Received data matches hash:", data
-else
+else:
 	print "Received data does not match hash:", data
