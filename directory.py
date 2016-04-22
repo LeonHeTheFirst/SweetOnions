@@ -10,6 +10,14 @@ NUM_ROUTERS = 5
 
 routerCount = 0
 onionRoutersDict = {}
+
+# TEST
+onionRoutersDict[0] = "131.145.441.0, 454gdgdj44"
+onionRoutersDict[1] = "131.150.441.1, sdfsdfds32"
+onionRoutersDict[2] = "131.155.441.2, s6fsd34433"
+onionRoutersDict[3] = "131.165.441.3, dsfdskk666"
+onionRoutersDict[4] = "131.175.441.4, 4454jjjj33"
+
 randomSelection = []
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
