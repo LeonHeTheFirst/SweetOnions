@@ -20,7 +20,17 @@ BUFFER_SIZE = 20  # Normally 1024, but we want fast response
 
 NODES = []
 
-##### TALK TO DIR NODE
+# new_key = RSA.generate(bits, e=65537) 
+# public_key = new_key.publickey().exportKey("PEM") 
+# private_key = new_key.exportKey("PEM") 
+# with open("private.key", 'w') as content_file:
+#     chmod("private.key", 0600)
+#     content_file.write(private_key.exportKey('PEM'))
+# pubkey = key.publickey()
+# with open("public.key", 'w') as content_file:
+#     content_file.write(prublic_key.exportKey('PEM'))
+
+r##### TALK TO DIR NODE
 #pub = open(public_key_file, "r").read()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_IP, DIR_PORT))
