@@ -41,10 +41,10 @@ else:
 
 
 ##### TALK TO DIR NODE
-#pub = open(public_key_file, "r").read()
+pub = open(public_key_file, "r").read()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_IP, DIR_PORT))
-s.send('Onion Router,akjsdhfklajshdkfjash')
+s.send('Onion Router,' + pub)
 s.close()
 
 key = open(private_key_file, "r").read()
@@ -69,7 +69,7 @@ while 1:
         #sending it off to next guy
         conn.closeall()
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind((nextNode, TCP_PORT))
+        s.connect((nextNode, TCP_PORT))
         s.send(payload)
         s.close()
         
