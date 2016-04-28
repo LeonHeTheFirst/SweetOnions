@@ -17,7 +17,7 @@ onionRoutersDict[1] = "131.150.441.1, sdfsdfds32"
 onionRoutersDict[2] = "131.155.441.2, s6fsd34433"
 onionRoutersDict[3] = "131.165.441.3, dsfdskk666"
 onionRoutersDict[4] = "131.175.441.4, 4454jjjj33"
-
+pubkeyDict = {}
 randomSelection = []
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,14 +32,15 @@ while 1:
 	
 	print dataReceived
 	# Initialization: Communicate with all onion routers until all keys are stored.	
-	#myData = dataReceived.split(",")
-	#if myData[0].strip() == "Onion Router":
-		#onionRoutersDict[routerCount] = myClientAddress + ", " + dataReceived[1].strip()
-		#routerCount = routerCount + 1
-		#print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
+	myData = dataReceived.split(",")
+	if myData[0].strip() == "Onion Router":
+		onionRoutersDict[routerCount] = myClientAddress + ", " + myData[1].strip()
+		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
+		routerCount = routerCount + 1
+		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 
 	# Initialization complete. 
-	if dataReceived == "Client Request" and len(onionRoutersDict) == NUM_ROUTERS:
+	if "Client Request" in dataReceived and len(onionRoutersDict) == NUM_ROUTERS:
 
 		# Select random routers to choose from.
 		while len(randomSelection) != 3:
@@ -48,7 +49,13 @@ while 1:
 				randomSelection.append(randomNum)
 
 		# Develop and send message.
-		message = onionRoutersDict[randomSelection[0]] + ", " + onionRoutersDict[randomSelection[1]] + ", " + onionRoutersDict[randomSelection[2]]
+		message = onionRoutersDict[randomSelection[0]] + "," + onionRoutersDict[randomSelection[1]] + "," + onionRoutersDict[randomSelection[2]]
 		myClientSocket.send(message)
 
 		randomSelection = []
+	elif "Node Request" in dataReceived and len(onionRoutersDict) == NUM_ROUTERS:
+
+
+
+
+
