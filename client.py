@@ -22,20 +22,46 @@ DIR_PORT = 1600
 TCP_PORT = 1601
 BUFFER_SIZE = 4096
 DIR_NODE = '127.0.0.1' #change this
+
+private_key_file = "private.key"
+public_key_file = "public.key"
+
+# when the command line argument for generating a key pair is passed
+if len(sys.argv) == 2 and sys.argv[1] == "key":
+    new_key = RSA.generate(2048, e=65537) 
+    public_key = new_key.publickey().exportKey('PEM') 
+    private_key = new_key.exportKey('PEM') 
+    with open(private_key_file, 'w') as content_file:
+        chmod(private_key_file, 0600)
+        content_file.write(private_key)
+    with open(public_key_file, 'w') as content_file:
+        content_file.write(public_key)
+elif len(sys.argv) == 1:
+    print "importing keys"
+else:
+    print "Incorrect arguments"
+    sys.exit()
+
+key_file = open(private_key_file, "r").read()
+rsakey = RSA.importKey(key)
+ownpubkey = rsakey.publickey().exportKey('PEM')
+
 dest_ip = raw_input("Destination Address: ")
 mes =  raw_input("Message: ")
 mes_hash = hashlib.sha224(mes).hexdigest()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
-s.send('Client Request')
+s.send('Client Request,' + ownpubkey)
 dir_data = s.recv(BUFFER_SIZE)
 s.close()
-print dir_data
+
+decrypted = rsakey.decrypt(dir_data)
+print decrypted
 #parse the directory data string
 #code goes here
 in_keys = []
 in_addr = []
-dir_arr = dir_data.split(',')
+dir_arr = decrypted.split(',')
 for x in dir_arr:
 	if '.' in x:
 		in_addr.append(x)
