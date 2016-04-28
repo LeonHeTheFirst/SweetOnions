@@ -6,6 +6,8 @@ Decrypt layer of encryption
 Relay data onward
 On data coming back, decrypt and send to previous node
 '''
+import sys
+from os import chmod
 import socket
 import Crypto
 from Crypto.PublicKey import RSA
@@ -17,20 +19,28 @@ DIR_PORT = 1600
 TCP_IP = '127.0.0.1'
 TCP_PORT = 1601
 BUFFER_SIZE = 20  # Normally 1024, but we want fast response
-
+private_key_file = "private.key"
+public_key_file = "public.key"
 NODES = []
 
-# new_key = RSA.generate(bits, e=65537) 
-# public_key = new_key.publickey().exportKey("PEM") 
-# private_key = new_key.exportKey("PEM") 
-# with open("private.key", 'w') as content_file:
-#     chmod("private.key", 0600)
-#     content_file.write(private_key.exportKey('PEM'))
-# pubkey = key.publickey()
-# with open("public.key", 'w') as content_file:
-#     content_file.write(prublic_key.exportKey('PEM'))
+# when the command line argument for generating a key pair is passed
+if len(sys.argv) == 2 and sys.argv[1] == "key":
+    new_key = RSA.generate(2048, e=65537) 
+    public_key = new_key.publickey().exportKey("PEM") 
+    private_key = new_key.exportKey("PEM") 
+    with open(private_key_file, 'w') as content_file:
+        chmod(private_key_file, 0600)
+        content_file.write(private_key)
+    with open(public_key_file, 'w') as content_file:
+        content_file.write(public_key)
+elif len(sys.argv) == 1:
+    print "importing keys"
+else:
+    print "Incorrect arguments"
+    sys.exit()
 
-r##### TALK TO DIR NODE
+
+##### TALK TO DIR NODE
 #pub = open(public_key_file, "r").read()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_IP, DIR_PORT))
