@@ -10,6 +10,8 @@ Client should do the following things in order:
 7. Compare returned hash to hash of sent packet
 8. Repeat from step 3
 '''
+import sys
+from os import chmod
 import socket
 import Crypto
 from Crypto.PublicKey import RSA
@@ -43,7 +45,7 @@ else:
     sys.exit()
 
 key_file = open(private_key_file, "r").read()
-rsakey = RSA.importKey(key)
+rsakey = RSA.importKey(key_file)
 ownpubkey = rsakey.publickey().exportKey('PEM')
 
 dest_ip = raw_input("Destination Address: ")
