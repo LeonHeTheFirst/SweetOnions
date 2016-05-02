@@ -53,8 +53,11 @@ mes =  raw_input("Message: ")
 mes_hash = hashlib.sha224(mes).hexdigest()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
-s.send('Client Request,' + ownpubkey)
-dir_data = s.recv(BUFFER_SIZE)
+while 1:
+	s.send('Client Request,' + ownpubkey)
+	dir_data = s.recv(BUFFER_SIZE)
+	if dir_data and "Not Ready" not in dir_data: break
+	sleep(1)
 s.close()
 
 decrypted = rsakey.decrypt(dir_data)
