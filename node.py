@@ -81,7 +81,7 @@ while 1:
     data = conn.recv(BUFFER_SIZE)
     if not data: break
     print "received data:", data
-    decrypted = rsakey.decrypt(data)
+    decrypted = privRSAkey.decrypt(data)
     dataArr = decrypted.split(",")
     nextNode = dataArr[0]
     payload = dataArr[1]
@@ -107,18 +107,18 @@ while 1:
 
     # Entrance Node
     elif entranceFlag == "entrance" and nextNode not in NODES:
+        conn.closeall()
+        s.close()
+
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((entranceAddr, TCP_PORT))
         s.send(payload)
         s.close()
 
-        
+        entranceFlag = ""
+        entranceAddr = ""
 
-
-
-
-
-
-
-
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((TCP_IP, TCP_PORT))
+        s.listen(1)
 
