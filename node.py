@@ -50,6 +50,23 @@ s.close()
 key = open(private_key_file, "r").read()
 rsakey = RSA.importKey(key)
 
+#listen to directory to fill dictionary
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((DIR_IP, DIR_PORT))
+s.listen(1)
+
+while 1:
+    conn, addr = s.accept()
+    data = conn.recv(BUFFER_SIZE)
+    decrypted = rsakey.decrypt(data)
+    dataArr = decrypted.split(",")
+    NODE = {dataArr[0]:dataArr[1]}
+    x = 2
+    while x < 9:
+        NODE.update({dataArr[x]:dataArr[x+1]})
+        x = x + 2
+
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
