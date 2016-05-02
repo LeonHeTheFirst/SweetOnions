@@ -41,6 +41,8 @@ while len(pubkeyDict) < 5:
 		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
 		routerCount = routerCount + 1
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
+	elif myData[0].strip() == "Client Request":
+		myClientSocket.sendall("Not ready yet")
 	myClientSocket.close()
 
 directoryServer.close()
