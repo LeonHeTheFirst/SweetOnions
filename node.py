@@ -72,6 +72,9 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
 
+entranceFlag = ""
+entranceAddr = ""
+
 print 'Connection address:', addr
 while 1:
     conn, addr = s.accept()
@@ -82,6 +85,10 @@ while 1:
     dataArr = decrypted.split(",")
     nextNode = dataArr[0]
     payload = dataArr[1]
+
+    if len(dataArr) > 2: 
+        entranceFlag = dataArr[2]
+        entranceAddr = addr
 
     if nextNode in NODES:
         #sending it off to next guy
@@ -97,28 +104,21 @@ while 1:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind((TCP_IP, TCP_PORT))
         s.listen(1)
-        #conn.send(data)  # echo
-    #exit node
-    else:
-        #sending it off to next guy
-        conn.closeall()
-        s.close()
+
+    # Entrance Node
+    elif entranceFlag == "entrance" and nextNode not in NODES:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((nextNode, TCP_PORT))
+        s.connect((entranceAddr, TCP_PORT))
         s.send(payload)
         s.close()
+
         
-        #listen on that port again
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind((TCP_IP, TCP_PORT))
-        s.listen(1)
-        #sending data back
-        #write code here
 
 
-        conn.close()
 
-    ##STILL NEED ENTRANCE NODE CASE
 
-#if final node case
-#
+
+
+
+
+
