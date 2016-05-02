@@ -77,6 +77,7 @@ for x in random.shuffle(range(0,2)):
 node_addr[0] = dest_ip
 
 def wrap_layers(message, nodes, public_keys):
+	message = message + ',' + nodes[2] + ',' + nodes[1] + ',' + nodes[0]
 	for x in range(0,2):
 		message = nodes[x] + ',' + message
 		message = public_keys[x].encrypt(message, 32)
