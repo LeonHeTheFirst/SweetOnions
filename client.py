@@ -83,6 +83,8 @@ def wrap_layers(message, nodes, public_keys):
 	message = message + ',' + nodes[2] + ',' + nodes[1] + ',' + nodes[0]
 	for x in range(0,2):
 		message = nodes[x] + ',' + message
+		if x == 2:
+			message = message + ',' + 'entrance'
 		message = public_keys[x].encrypt(message, 32)
 
 wrap_layers(mes, node_addr, pubkeys)
