@@ -18,13 +18,13 @@ DIR_PORT = 1600
 
 TCP_IP = '127.0.0.1'
 TCP_PORT = 1601
-BUFFER_SIZE = 20  # Normally 1024, but we want fast response
+BUFFER_SIZE = 4096  # Normally 1024, but we want fast response
 private_key_file = "private.key"
 public_key_file = "public.key"
 NODES = {}
 
 # when the command line argument for generating a key pair is passed
-if len(sys.argv) == 2 and sys.argv[1] == "key":
+if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
     new_key = RSA.generate(2048, e=65537) 
     public_key = new_key.publickey().exportKey("PEM") 
     private_key = new_key.exportKey("PEM") 
@@ -34,38 +34,39 @@ if len(sys.argv) == 2 and sys.argv[1] == "key":
     with open(public_key_file, 'w') as content_file:
         content_file.write(public_key)
 elif len(sys.argv) == 1:
-    print "importing keys"
+    try:
+        pubkey = open(public_key_file).read()
+        privkey = open(private_key_file).read()
+        print "importing keys"
+    except:
+        print "importing keys failed"
 else:
     print "Incorrect arguments"
     sys.exit()
 
 
 ##### TALK TO DIR NODE
-pub = open(public_key_file, "r").read()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_IP, DIR_PORT))
-s.send('Onion Router,' + pub)
+s.send('Onion Router,' + pubkey)
 s.close()
 
-key = open(private_key_file, "r").read()
-rsakey = RSA.importKey(key)
+privRSAkey = RSA.importKey(privkey)
+pubRSAkey = RSA.importKey(pubkey)
 
 #listen to directory to fill dictionary
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((DIR_IP, DIR_PORT))
 s.listen(1)
 
-while 1:
-    conn, addr = s.accept()
-    data = conn.recv(BUFFER_SIZE)
-    decrypted = rsakey.decrypt(data)
-    dataArr = decrypted.split(",")
-    NODE = {dataArr[0]:dataArr[1]}
-    x = 2
-    while x < 9:
-        NODE.update({dataArr[x]:dataArr[x+1]})
-        x = x + 2
-
+conn, addr = s.accept()
+data = conn.recv(BUFFER_SIZE)
+decrypted = privRSAkey.decrypt(data)
+dataArr = decrypted.split(",")
+for x in range(5):
+    NODES[dataArr[2 * x]] = dataArr[2 * x + 1]
+conn.close()
+s.close()        
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
@@ -85,6 +86,8 @@ while 1:
     if nextNode in NODES:
         #sending it off to next guy
         conn.closeall()
+        s.close()
+        
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((nextNode, TCP_PORT))
         s.send(payload)
@@ -95,10 +98,11 @@ while 1:
         s.bind((TCP_IP, TCP_PORT))
         s.listen(1)
         #conn.send(data)  # echo
-    #last node
+    #exit node
     else:
         #sending it off to next guy
         conn.closeall()
+        s.close()
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((nextNode, TCP_PORT))
         s.send(payload)
@@ -113,6 +117,8 @@ while 1:
 
 
         conn.close()
+
+    ##STILL NEED ENTRANCE NODE CASE
 
 #if final node case
 #
