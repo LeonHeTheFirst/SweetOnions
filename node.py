@@ -123,18 +123,32 @@ while 1:
         s.listen(1)
 
     # Exit Node
-    # dest, message, node 0, node 1, node 2
-    elif nextNode not in NODES and len(dataArr) == 5:
+    # dest, message, node 0, node 1, node 2, ...
+    elif nextNode not in NODES and len(dataArr) > 3:
+        conn.closeall()
+        s.close()
+        
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((nextNode, TCP_PORT))
         s.send(payload)
 
         data = s.recv(BUFFER_SIZE)
-        message = dataArr[3].encrypt(dataArr[2].encrypt(message, 32), 32)
+        message = ""
+        nextAddr = ""
+        for x in range(len(dataArr) - 3):
+            nodeKey = RSA.importKey(NODES[dataArr[x+2]])
+            temp = nodeKey.encrypt(message, 32)
+            if x != len(dataArr) - 4:
+                temp += dataArr[x+2]
+            else:
+                nextAddr = dataArr[x+2]
+            message += temp
+        
+        #message = dataArr[3].encrypt(dataArr[2].encrypt(message, 32), 32)
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((dataArr[3], TCP_PORT))
-        s.send(payload)
+        s.connect((nextAddr, TCP_PORT))
+        s.send(message)
         s.close()
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
