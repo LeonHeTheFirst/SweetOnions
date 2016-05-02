@@ -21,7 +21,7 @@ TCP_PORT = 1601
 BUFFER_SIZE = 20  # Normally 1024, but we want fast response
 private_key_file = "private.key"
 public_key_file = "public.key"
-NODES = []
+NODES = {}
 
 # when the command line argument for generating a key pair is passed
 if len(sys.argv) == 2 and sys.argv[1] == "key":
@@ -78,10 +78,21 @@ while 1:
         s.bind((TCP_IP, TCP_PORT))
         s.listen(1)
         #conn.send(data)  # echo
-        
+    #last node
     else:
-        #exit node case
+        #sending it off to next guy
+        conn.closeall()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((nextNode, TCP_PORT))
+        s.send(payload)
+        s.close()
         
+        #listen on that port again
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((TCP_IP, TCP_PORT))
+        s.listen(1)
+        #sending data back
+        #write code here
 
 
         conn.close()
