@@ -10,8 +10,8 @@ from Crypto.PublicKey import RSA
 from Crypto import Random
 from aes_rsa import *
 
-NUM_ROUTERS = 1
-NUM_NODES = 1
+NUM_ROUTERS = 2
+NUM_NODES = 2
 
 routerCount = 0
 #onionRoutersDict = {}

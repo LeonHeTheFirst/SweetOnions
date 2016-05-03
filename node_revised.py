@@ -115,7 +115,7 @@ while 1:
 		# Entrance Node
 		elif entranceFlag == "entrance" and not nextNode:
 			s.connect((entranceAddr, TCP_PORT))
-			s.send(decryptedMessage[1] + "," + decryptedMessage[2])
+			s.send(decryptedMessage[1])
 			s.close()
 			
 			entranceFlag = ""

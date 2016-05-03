@@ -22,7 +22,7 @@ import hashlib
 import base64
 fromt aes_rsa import *
 
-NUM_NODES = 1
+NUM_NODES = 2
 DIR_PORT = 1600
 TCP_PORT = 1601
 BUFFER_SIZE = 4096
