@@ -34,11 +34,11 @@ while len(pubkeyDict) < 5:
 	myClientAddress = myClientAddress[0]
 	dataReceived = myClientSocket.recv(1024)
 	
-	print dataReceived
+
 	# Initialization: Communicate with all onion routers until all keys are stored.	
 	myData = dataReceived.split(",")
 	if myData[0].strip() == "Onion Router":
-		onionRoutersDict[routerCount] = myClientAddress + ", " + myData[1].strip()
+		pubkeyDict[routerCount] = myClientAddress + ", " + myData[1].strip()
 		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
 		routerCount = routerCount + 1
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
