@@ -19,6 +19,7 @@ s.listen(1) #maximum 1 connection
 
 while 1:
 	conn, addr = s.accept()
+	addr = addr[0]
 	print 'Connection address:', addr
 	data = conn.recv(BUFFER_SIZE)
 	hashed = hashlib.sha224(data).hexdigest()

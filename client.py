@@ -109,7 +109,7 @@ s.listen(1)
 
 while 1:
 	conn, addr = s.accept()
-
+        addr = addr[0]
 	if addr == node_addr[len(node_addr) - 1]:
 		data = conn.recv(BUFFER_SIZE)
 		if data == mes_hash:

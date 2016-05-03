@@ -31,6 +31,7 @@ directoryServer.listen(5)
 # Begin listening
 while len(pubkeyDict) < 5:
 	myClientSocket, myClientAddress = directoryServer.accept()
+	myClientAddress = myClientAddress[0]
 	dataReceived = myClientSocket.recv(1024)
 	
 	print dataReceived
@@ -95,6 +96,7 @@ directoryServer.listen(5)
 
 while 1:
 	myClientSocket, myClientAddress = directoryServer.accept()
+	myClientAddress = myClientAddress[0]
         dataReceived = myClientSocket.recv(1024)
 	
 	myData = dataReceived.split(",")

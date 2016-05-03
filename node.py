@@ -33,7 +33,7 @@ if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
         content_file.write(private_key)
     with open(public_key_file, 'w') as content_file:
         content_file.write(public_key)
-elif len(sys.argv) == 1:
+if len(sys.argv) == 1:
     try:
         pubkey = open(public_key_file).read()
         privkey = open(private_key_file).read()
@@ -61,6 +61,7 @@ s.bind((DIR_IP, DIR_PORT))
 s.listen(1)
 
 conn, addr = s.accept()
+addr = addr[0]
 data = conn.recv(BUFFER_SIZE)
 decrypted = privRSAkey.decrypt(data)
 dataArr = decrypted.split(",")
@@ -79,6 +80,7 @@ entranceAddr = ""
 print 'Connection address:', addr
 while 1:
     conn, addr = s.accept()
+    addr = addr[0]
     data = conn.recv(BUFFER_SIZE)
     if not data: break
     print "received data:", data
