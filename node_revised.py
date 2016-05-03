@@ -106,20 +106,21 @@ while 1:
 		s.close()
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-		# Send to Next Node
-		if nextNode in NODES:  
-			s.connect((nextNode, TCP_PORT))
-			s.send(decryptedMessage[1] + "," + decryptedMessage[2])
-			s.close()
-        
-		# Entrance Node
-		elif entranceFlag == "entrance" and not nextNode:
-			s.connect((entranceAddr, TCP_PORT))
-			s.send(decryptedMessage[1])
-			s.close()
-			
-			entranceFlag = ""
-			entranceAddr = ""
+	# Send to Next Node
+	if nextNode in NODES:  
+		s.connect((nextNode, TCP_PORT))
+		s.send(decryptedMessage[1] + "," + decryptedMessage[2])
+		s.close()
+		
+	# Entrance Node
+	elif entranceFlag == "entrance" and not nextNode:
+		s.connect((entranceAddr, TCP_PORT))
+		# original's server response (at least it's supposed to be)
+		s.send(decryptedMessage[1])
+		s.close()
+		
+		entranceFlag = ""
+		entranceAddr = ""
 		
 	# Exit Node - Send Data Back
 	elif nextNode not in NODES:
@@ -148,17 +149,6 @@ while 1:
 		s.send(returnMessage)
 		s.close()
 		
-
-	#every other node case
-	else:
-		conn.close()
-                s.close()
-
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.connect((nextNode, TCP_PORT))
-		s.send(decryptedMessage[1] + decryptedMessage[2])
-		s.close()
-
 	# Continue Listening
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind((TCP_IP, TCP_PORT))
