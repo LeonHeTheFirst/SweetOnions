@@ -19,6 +19,7 @@ from Crypto import Random
 import ast
 import random
 import hashlib
+import base64
 
 DIR_PORT = 1600
 TCP_PORT = 1601
@@ -49,6 +50,7 @@ else:
 try:
     key_file = open(private_key_file, "r").read()
     rsakey = RSA.importKey(key_file)
+    #print("rsa prive key: " + rsakey)
     ownpubkey = open(public_key_file, "r").read()
     print(ownpubkey)
     #ownpubkey = rsakey.publickey().exportKey('PEM')
@@ -73,8 +75,9 @@ while 1:
 	#sleep(1)
 s.close()
 
-decrypted = rsakey.decrypt(dir_data)
-print decrypted
+raw_cipher_data = dir_data
+decrypted = rsakey.decrypt(raw_cipher_data)
+print(decrypted, raw_cipher_data)
 #parse the directory data string
 #code goes here
 in_keys = []

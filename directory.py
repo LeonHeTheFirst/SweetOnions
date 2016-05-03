@@ -131,9 +131,11 @@ while 1:
 		#encrypt message by importing client's public key
 		clientKey = RSA.importKey(myData[1])
 		print(myData[1])
+		print(message)
 		encryptedMessage = clientKey.encrypt(message,32)
 		print(encryptedMessage)
-		myClientSocket.send(str(encryptedMessage))
+		print(encryptedMessage[0])
+		myClientSocket.send(encryptedMessage[0])
 		myClientSocket.close()
 
 directoryServer.close()
