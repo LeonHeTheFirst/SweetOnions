@@ -8,6 +8,7 @@ import random
 import Crypto
 from Crypto.PublicKey import RSA
 from Crypto import Random
+from aes_rsa import *
 
 NUM_ROUTERS = 1
 NUM_NODES = 1
@@ -136,17 +137,11 @@ while 1:
                 #encrypt route by importing client's public key
 		clientKey = RSA.importKey(myData[1])
 		
-		#################################################
-		#################################################
-		#encryptedMessage = clientKey.encrypt(message,32)
-		#print(encryptedMessage)
-		#print(encryptedMessage[0])
-		#myClientSocket.send(encryptedMessage[0])
-		#################################################
-		#################################################
-
-		#HAVE TO ADD ENCRYPTED AES KEY TO MESSAGE
-		myClientSocket.send(message)
+		aesKey = genAESKey()
+		encryptedMsg = encryptAES(aesKey, message)
+		encryptedKey = clientKey.encrypt(aesKey, 32)[0]
+		toSend = encryptedMsg + "," encryptedKey
+		myClientSocket.send(toSend)
 		myClientSocket.close()
 
 directoryServer.close()

@@ -78,9 +78,10 @@ while 1:
 	#sleep(1)
 s.close()
 
-raw_cipher_data = dir_data
-#decrypted = rsakey.decrypt(raw_cipher_data)
-#print(decrypted, raw_cipher_data)
+encMsg, encKey = dir_data.split(",")
+decryptedKey = decryptRSA(key_file, encKey)
+decryptedMsg = decryptAES(encMsg, decryptedKey)
+print(decryptedMsg)
 
 
 #parse the directory data string
@@ -105,35 +106,33 @@ random.shuffle(y)
 pubkeys = {}
 node_addr = [dest_ip]
 for x in y:
-    pubkeys[i] = RSA.importKey(in_keys[x])
+    pubkeys[i] = in_keys[x]
     node_addr.append(in_addr[x])
     i+=1
 
 
 print("UP TO WRAPPING LAYERS")
+# front of nodes is server ip, back of nodes is entrance node
 def wrap_layers(message, nodes, public_keys):
-    for x in nodes:
+    for x in nodes[1:]:
         message += x
         #message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
-    for x in range(len(nodes)):
+    for x in range(len(nodes) - 1):
         message = nodes[x] + ',' + message
-        if x == len(nodes) - 1:
+        if x == len(nodes) - 2:
             message = message + ',' + 'entrance'
 
-        ###############################################
-        #message = public_keys[x].encrypt(message, 32)#
-        ###############################################
-        #HAVE TO ADD ENCRYPTED AES KEY TO EACH LAYER  #
-        ###############################################
-
+        encryptedKey, encryptedMsg = easyEncrypt(pubkeys[x], message)
+        message = encryptedMsg + "," + encryptedKey
+        
     return message
 
-mes = wrap_layers(mes, node_addr, pubkeys)
+message = wrap_layers(mes, node_addr, pubkeys)
 
 # Send Message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((node_addr[i], TCP_PORT))
-s.send(mes)
+s.send(message)
 s.close()
 
 # Recieve Message
