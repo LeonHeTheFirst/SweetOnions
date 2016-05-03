@@ -116,7 +116,7 @@ print("UP TO WRAPPING LAYERS")
 # front of nodes is server ip, back of nodes is entrance node
 def wrap_layers(message, nodes, public_keys):
     for x in nodes[1:]:
-        message += x
+        message += "," + x
         #message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
     for x in range(len(nodes) - 1):
         message = nodes[x] + ',' + message
