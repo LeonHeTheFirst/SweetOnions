@@ -120,7 +120,6 @@ while 1:
 			entranceFlag = ""
 			entranceAddr = ""
 		
-
 	# Exit Node - Send Data Back
 	elif nextNode not in NODES:
 		conn.close()
@@ -148,6 +147,16 @@ while 1:
 		s.send(returnMessage)
 		s.close()
 		
+
+	#every other node case
+	else:
+		conn.close()
+                s.close()
+
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.connect((nextNode, TCP_PORT))
+		s.send(decryptedMessage[1] + decryptedMessage[2])
+		s.close()
 
 	# Continue Listening
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
