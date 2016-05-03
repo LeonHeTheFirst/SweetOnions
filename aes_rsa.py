@@ -39,7 +39,7 @@ def encryptAES(key, msg):
 def decryptAES(key, msg):
 	decrypter = AES.new(base64.b64decode(key))
 	decryptedMsg = DecodeAES(decrypter, msg)
-	pass
+	return decryptedMsg
 
 #Encrypts using RSA public key
 #Arguments are public key and message
