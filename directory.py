@@ -56,42 +56,13 @@ while len(pubkeyDict) < NUM_ROUTERS:
 directoryServer.close()
 time.sleep(1)
 
-'''
-		#send new addition to all nodes
-		message = "" + myClientAddress + ":" + myData[1].strip()
-		for x in pubkeyDict.keys():
-			nodeKey = RSA.importKey(pubkeyDict[x])
-			encrypted = nodeKey.encrypt(message)
-			
-			send = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			send.connect((""+x, 1600))
-			send.send(encrypted)
-
-		#send dictionary to new node
-		message = ""
-		for x in pubkeyDict.keys():
-			message += "#####" + x + ":" + pubkeyDict[x]
-		newNodeKey = RSA.importKey(myData[1].strip())
-		encrypted = newNodeKey.encrypt(message)
-		directoryServer.closeall()
-		directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		directoryServer.connect((myClientAddress, 1600))
-		directoryServer.send(encrypted)
-		directoryServer.close()
-		
-		directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing 
-		directoryServer.listen(5)
-		'''			      
-
+#sending serialized dictionary to all nodes
 message = ""                                                 
 for x in pubkeyDict.keys():                                                                                                
 	print(pubkeyDict.keys())
 	message += "," + str(x) + "," + str(pubkeyDict[x])
 message = message[1:]
 for x in pubkeyDict.keys():
-	#nodeKey =  RSA.importKey(pubkeyDict[x])
-	#encrypted = nodeKey.encrypt(message)
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                                                        
 	conn.connect((str(x), 1600))                                                                           
 	conn.send(message)                                                                                            
@@ -145,8 +116,3 @@ while 1:
 		myClientSocket.close()
 
 directoryServer.close()
-
-'''
-	elif "Node Request" in dataReceived and len(onionRoutersDict) == NUM_ROUTERS:
-		pass
-'''

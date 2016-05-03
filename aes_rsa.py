@@ -21,9 +21,9 @@ def genAESKey():
 #returns a tuple with public key as the first value and private key as the second
 def genRSAKey():
 	new_key = RSA.generate(2048, e=65537)
-    public_key = new_key.publickey().exportKey('PEM') 
-    private_key = new_key.exportKey('PEM') 
-    return (public_key, private_key)
+	public_key = new_key.publickey().exportKey('PEM') 
+	private_key = new_key.exportKey('PEM') 
+	return (public_key, private_key)
 
 #Encrypts using AES
 #Arguments are the key, then the message
