@@ -16,7 +16,8 @@ from Crypto import Random
 DIR_IP = '127.0.0.1'
 DIR_PORT = 1600
 
-TCP_IP = '127.0.0.1'
+#TCP_IP = '127.0.0.1'
+TCP_IP = socket.gethostbyname(socket.gethostname())
 TCP_PORT = 1601
 BUFFER_SIZE = 4096  # Normally 1024, but we want fast response
 private_key_file = "private.key"

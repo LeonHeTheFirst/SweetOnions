@@ -23,13 +23,16 @@ routerCount = 0
 pubkeyDict = {}
 randomSelection = []
 
+DIR_IP = socket.gethostbyname(socket.gethostname())
+#DIR_IP = "127.0.0.1"
+
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-directoryServer.bind(("127.0.0.1", 1600)) #'127.0.0.1' for testing
+directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing
 print socket.gethostname()
 directoryServer.listen(5)
 
 # Begin listening
-while len(pubkeyDict) < 5:
+while len(pubkeyDict) < NUM_ROUTERS:
 	myClientSocket, myClientAddress = directoryServer.accept()
 	myClientAddress = myClientAddress[0]
 	dataReceived = myClientSocket.recv(1024)
@@ -72,7 +75,7 @@ directoryServer.close()
 		directoryServer.close()
 		
 		directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		directoryServer.bind(("127.0.0.1", 1600)) #'127.0.0.1' for testing 
+		directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing 
 		directoryServer.listen(5)
 		'''			      
 
@@ -90,7 +93,7 @@ for x in pubkeyDict.keys():
 
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-directoryServer.bind(("127.0.0.1", 1600)) #'127.0.0.1' for testing
+directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing
 #print socket.gethostname()
 directoryServer.listen(5)
 

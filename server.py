@@ -7,9 +7,10 @@ Should send back the hash of the received message
 import socket
 import hashlib
 
-TCP_IP = '127.0.0.1'
+TCP_IP = socket.gethostbyname(socket.gethostname())
+#TCP_IP = '127.0.0.1'
 TCP_PORT = 1601
-BUFFER_SIZE = 20  # Normally 1024, but we want fast response
+BUFFER_SIZE = 512  # Normally 1024, but we want fast response
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
