@@ -19,9 +19,9 @@ s.listen(1) #maximum 1 connection
 print 'Connection address:', addr
 while 1:
 	conn, addr = s.accept()
-    data = conn.recv(BUFFER_SIZE)
-    hashed = hashlib.sha224(data).hexdigest()
-    if not data: break
-    print "received data:", data
-    conn.send(hashed)  # return hash
+	data = conn.recv(BUFFER_SIZE)
+	hashed = hashlib.sha224(data).hexdigest()
+	if not data: break
+	print "received data:", data
+	conn.send(hashed)  # return hash
 conn.close()
