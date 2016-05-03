@@ -10,6 +10,7 @@ On data coming back, decrypt and send to previous node
 import socket
 import sys
 from os import chmod
+from aes_rsa import *
 
 DIR_IP = '172.17.224.57'
 DIR_PORT = 1600
@@ -19,7 +20,7 @@ TCP_PORT = 1601
 
 BUFFER_SIZE = 4096 
 NODES = {}
-
+NUM_NODES = 2
 
 # Generate RSA Keys
 # -----------------------------
@@ -70,7 +71,7 @@ myData = conn.recv(BUFFER_SIZE).split(",")
 
 print 'Connection address:', addr
 
-for x in range(1):
+for x in range(NUM_NODES):
 	NODES[myData[2 * x]] = myData[2 * x + 1]
 
 conn.close()
