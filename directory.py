@@ -81,11 +81,11 @@ for x in pubkeyDict.keys():
 	message += "," + x + "," + pubkeyDict[x]                                                                       
 message = message[1:]
 for x in pubkeyDict.keys():
-	nodeKey =  RSA.importKey(pubkeyDict[x])
-	encrypted = nodeKey.encrypt(message)
+	#nodeKey =  RSA.importKey(pubkeyDict[x])
+	#encrypted = nodeKey.encrypt(message)
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                                                        
 	conn.connect((x, 1600))                                                                           
-	conn.send(encrypted)                                                                                            
+	conn.send(message)                                                                                            
 	conn.close()                                                                                                    
 
 

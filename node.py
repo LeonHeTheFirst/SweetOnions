@@ -63,8 +63,8 @@ s.listen(1)
 conn, addr = s.accept()
 addr = addr[0]
 data = conn.recv(BUFFER_SIZE)
-decrypted = privRSAkey.decrypt(data)
-dataArr = decrypted.split(",")
+#decrypted = privRSAkey.decrypt(data)
+dataArr = data.split(",")
 for x in range(5):
     NODES[dataArr[2 * x]] = dataArr[2 * x + 1]
 conn.close()
