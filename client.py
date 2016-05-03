@@ -20,7 +20,7 @@ import ast
 import random
 import hashlib
 import base64
-fromt aes_rsa import *
+from aes_rsa import *
 
 NUM_NODES = 2
 DIR_PORT = 1600

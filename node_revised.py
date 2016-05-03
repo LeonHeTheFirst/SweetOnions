@@ -30,7 +30,7 @@ privateKeyFile = "privateRSA.key"
 publicKeyFile = "publicRSA.key"
 
 if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
-	RSAKeys = aes_rsa.genRSAKey()
+	RSAKeys = genRSAKey()
 	with open(privateKeyFile, 'w') as myContent:
 		chmod(privateKeyFile, 0600)
 		myContent.write(RSAKeys[1])
