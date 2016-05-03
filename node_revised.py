@@ -101,7 +101,7 @@ while 1:
 		entranceFlag = decryptedMessage[3]
 		entranceAddr = addr
 
-		conn.closeall()
+		conn.close()
 		s.close()
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -119,25 +119,33 @@ while 1:
 			
 			entranceFlag = ""
 			entranceAddr = ""
+		
 
 	# Exit Node - Send Data Back
 	elif nextNode not in NODES:
+		conn.close()
+		s.close()
+
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1])
-		
-		serverResponse = s.recv(BUFFER_SIZE)
-     	
-		# WORK IN PROGRESS ---- 
-		# Goal: Encrypt on way back
 
-		encryptedOne = easyEncrypt(privateRSA, decryptedMessage[0] + "," + serverResponse + "," + NODES[decryptedMessage[0]])
-		encryptedTwo = easyEncrypt(privateRSA, encryptedOne[0] + "," + encryptOne[1])
+		serverResponse = s.recv(BUFFER_SIZE)
+		s.close()
 		
-		# ----------------------
+		returnRoute = decryptedMessage[3:].reverse()
+		returnMessage = serverResponse
+		for x in range(len(returnRoute)):
+			returnMessage = "," + returnMessage
+			if x != 0:
+				returnMessage = returnRoute[x-1] + returnMessage
+			encryptedKey, encryptedMsg = easyEncrypt(NODES[returnRoute[x]], returnMessage)
+			returnMessage = encryptedMsg + "," + encryptedKey
+			
 		
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.connect((, TCP_PORT))
-		s.send()
+		s.connect((decryptedMessage[3], TCP_PORT))
+		s.send(returnMessage)
 		s.close()
 		
 

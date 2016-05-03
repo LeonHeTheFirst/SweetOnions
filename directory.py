@@ -111,7 +111,7 @@ while 1:
 		aesKey = genAESKey()
 		encryptedMsg = encryptAES(aesKey, message)
 		encryptedKey = clientKey.encrypt(aesKey, 32)[0]
-		toSend = encryptedMsg + "," encryptedKey
+		toSend = encryptedMsg + "," +encryptedKey
 		myClientSocket.send(toSend)
 		myClientSocket.close()
 
