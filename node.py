@@ -34,17 +34,20 @@ if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
         content_file.write(private_key)
     with open(public_key_file, 'w') as content_file:
         content_file.write(public_key)
-if len(sys.argv) == 1:
-    try:
-        pubkey = open(public_key_file).read()
-        privkey = open(private_key_file).read()
-        print "importing keys"
-    except:
-        print "importing keys failed"
-        exit()
+elif len(sys.argv) == 1:
+    print "importing keys"
+    
 else:
     print "Incorrect arguments"
     sys.exit()
+
+try:
+    pubkey = open(public_key_file).read()
+    privkey = open(private_key_file).read()
+except:
+    print "importing keys failed"
+    exit()
+
 
 
 ##### TALK TO DIR NODE
