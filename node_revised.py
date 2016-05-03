@@ -101,24 +101,24 @@ while 1:
 		entranceFlag = decryptedMessage[3]
 		entranceAddr = addr
 
-		conn.closeall()
-		s.close()
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	conn.closeall()
+	s.close()
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-		# Send to Next Node
-		if nextNode in NODES:  
-			s.connect((nextNode, TCP_PORT))
-			s.send(decryptedMessage[1] + "," + decryptedMessage[2])
-			s.close()
-        
-		# Entrance Node
-		elif entranceFlag == "entrance" and not nextNode:
-			s.connect((entranceAddr, TCP_PORT))
-			s.send(decryptedMessage[1] + "," + decryptedMessage[2])
-			s.close()
-			
-			entranceFlag = ""
-			entranceAddr = ""
+	# Send to Next Node
+	if nextNode in NODES:  
+		s.connect((nextNode, TCP_PORT))
+		s.send(decryptedMessage[1] + "," + decryptedMessage[2])
+		s.close()
+    
+	# Entrance Node
+	elif entranceFlag == "entrance" and not nextNode:
+		s.connect((entranceAddr, TCP_PORT))
+		s.send(decryptedMessage[1] + "," + decryptedMessage[2])
+		s.close()
+		
+		entranceFlag = ""
+		entranceAddr = ""
 
 	# Exit Node - Send Data Back
 	elif nextNode not in NODES:
