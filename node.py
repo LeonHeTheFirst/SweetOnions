@@ -13,7 +13,7 @@ import Crypto
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
-DIR_IP = '127.0.0.1'
+DIR_IP = '172.17.224.57'
 DIR_PORT = 1600
 
 #TCP_IP = '127.0.0.1'
@@ -61,7 +61,7 @@ pubRSAkey = RSA.importKey(pubkey)
 
 #listen to directory to fill dictionary
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((DIR_IP, DIR_PORT))
+s.bind((TCP_IP, DIR_PORT))
 s.listen(1)
 
 conn, addr = s.accept()
