@@ -30,6 +30,9 @@ DIR_NODE = '172.17.224.57' #change this
 private_key_file = "private.key"
 public_key_file = "public.key"
 
+pubkeys = {}
+
+
 # when the command line argument for generating a key pair is passed
 if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
     new_key = RSA.generate(2048, e=65537) 
@@ -76,38 +79,46 @@ while 1:
 s.close()
 
 raw_cipher_data = dir_data
-decrypted = rsakey.decrypt(raw_cipher_data)
-print(decrypted, raw_cipher_data)
+#decrypted = rsakey.decrypt(raw_cipher_data)
+#print(decrypted, raw_cipher_data)
+
+
 #parse the directory data string
 #code goes here
 in_keys = []
 in_addr = []
-dir_arr = decrypted.split(',')
-for x in dir_arr:
+dir_arr = dir_data.split(',')
+for x in range(len(dir_arr)/2):
+    '''
     if '.' in x:
         in_addr.append(x)
     else:
         in_keys.append(x)
+        '''
+    in_addr.append(dir_arr[2*x])
+    in_keys.append(dir_arr[2*x + 1])
 i = 0
 y = range(0,1)
 random.shuffle(y)
+node_addr = [0,0]
 for x in y:
-	pubkeys[i] = RSA.importKey(in_keys[x])
-	node_addr[i+1] = in_addr[x]
-	i+=1
+    pubkeys[i] = RSA.importKey(in_keys[x])
+    node_addr[i+1] = in_addr[x]
+    i+=1
 node_addr[0] = dest_ip
 
 
 print("UP TO WRAPPING LAYERS")
 def wrap_layers(message, nodes, public_keys):
-	message = message + ',' + nodes[2] + ',' + nodes[1] + ',' + nodes[0]
-	for x in range(0,2):
-		message = nodes[x] + ',' + message
-		if x == 2:
-			message = message + ',' + 'entrance'
-		message = public_keys[x].encrypt(message, 32)
+    message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
+    for x in range(0,1):
+        message = nodes[0] + ',' + message
+        if x == 0:
+            message = message + ',' + 'entrance'
+        message = public_keys[x].encrypt(message, 32)
+    return message[0]
 
-wrap_layers(mes, node_addr, pubkeys)
+mes = wrap_layers(mes, node_addr, pubkeys)
 
 # Send Message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -117,7 +128,7 @@ s.close()
 
 # Recieve Message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((TCP_IP, TCP_PORT))
+s.bind(("172.17.224.57", TCP_PORT))
 s.listen(1)
 
 while 1:
