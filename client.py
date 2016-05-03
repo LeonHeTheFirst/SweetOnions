@@ -41,21 +41,19 @@ if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
         content_file.write(public_key)
 elif len(sys.argv) == 1:
     print "importing keys"
-    try:
-        key_file = open(private_key_file, "r").read()
-        rsakey = RSA.importKey(key_file)
-        ownpubkey = rsakey.publickey().exportKey('PEM')
-    except:
-        print "failed to import keys"
-        exit()
+    
 else:
     print "Incorrect arguments"
     sys.exit()
-'''
-key_file = open(private_key_file, "r").read()
-rsakey = RSA.importKey(key_file)
-ownpubkey = rsakey.publickey().exportKey('PEM')
-'''
+
+try:
+    key_file = open(private_key_file, "r").read()
+    rsakey = RSA.importKey(key_file)
+    ownpubkey = rsakey.publickey().exportKey('PEM')
+except:
+    print "failed to import keys"
+    exit()
+
 dest_ip = raw_input("Destination Address: ")
 mes =  raw_input("Message: ")
 mes_hash = hashlib.sha224(mes).hexdigest()
@@ -64,8 +62,11 @@ s.connect((DIR_NODE, DIR_PORT))
 while 1:
 	s.send('Client Request,' + ownpubkey)
 	dir_data = s.recv(BUFFER_SIZE)
-	if dir_data and "Not Ready" not in dir_data: break
-	sleep(1)
+        print(dir_data)
+	if dir_data and "Not ready yet" in dir_data: 
+            print("directory server not ready")
+            exit()
+	#sleep(1)
 s.close()
 
 decrypted = rsakey.decrypt(dir_data)

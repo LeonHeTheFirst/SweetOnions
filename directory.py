@@ -36,8 +36,8 @@ while len(pubkeyDict) < NUM_ROUTERS:
 	myClientSocket, myClientAddress = directoryServer.accept()
 	myClientAddress = myClientAddress[0]
 	dataReceived = myClientSocket.recv(1024)
-	
-
+	print(myClientAddress)
+	print(dataReceived)
 	# Initialization: Communicate with all onion routers until all keys are stored.	
 	myData = dataReceived.split(",")
 	if myData[0].strip() == "Onion Router":
@@ -46,7 +46,8 @@ while len(pubkeyDict) < NUM_ROUTERS:
 		routerCount = routerCount + 1
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 	elif myData[0].strip() == "Client Request":
-		myClientSocket.sendall("Not ready yet")
+		myClientSocket.send("Not ready yet")
+	
 	myClientSocket.close()
 
 directoryServer.close()
