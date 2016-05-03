@@ -2,14 +2,14 @@
 # to access. Upon request, provide three nodes (entry, onion router, exit) for the client. 
 # This should also be able to communicate with the other available nodes and obtain 
 # their information (i.e. changing public keys, etc.).
-
+import time
 import socket
 import random
 import Crypto
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
-NUM_ROUTERS = 5
+NUM_ROUTERS = 1
 
 routerCount = 0
 #onionRoutersDict = {}
@@ -27,6 +27,7 @@ DIR_IP = socket.gethostbyname(socket.gethostname())
 #DIR_IP = "127.0.0.1"
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+directoryServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing
 print socket.gethostname()
 directoryServer.listen(5)
@@ -41,7 +42,7 @@ while len(pubkeyDict) < NUM_ROUTERS:
 	# Initialization: Communicate with all onion routers until all keys are stored.	
 	myData = dataReceived.split(",")
 	if myData[0].strip() == "Onion Router":
-		pubkeyDict[routerCount] = myClientAddress + ", " + myData[1].strip()
+		#pubkeyDict[routerCount] = myClientAddress + ", " + myData[1].strip()
 		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
 		routerCount = routerCount + 1
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
@@ -51,6 +52,7 @@ while len(pubkeyDict) < NUM_ROUTERS:
 	myClientSocket.close()
 
 directoryServer.close()
+time.sleep(1)
 
 '''
 		#send new addition to all nodes
@@ -82,19 +84,26 @@ directoryServer.close()
 
 message = ""                                                 
 for x in pubkeyDict.keys():                                                                                                
-	message += "," + x + "," + pubkeyDict[x]                                                                       
+	print(pubkeyDict.keys())
+	message += "," + str(x) + "," + str(pubkeyDict[x])
 message = message[1:]
 for x in pubkeyDict.keys():
 	#nodeKey =  RSA.importKey(pubkeyDict[x])
 	#encrypted = nodeKey.encrypt(message)
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                                                        
-	conn.connect((x, 1600))                                                                           
+	conn.connect((str(x), 1600))                                                                           
 	conn.send(message)                                                                                            
 	conn.close()                                                                                                    
 
+time.sleep(1)
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing
+while (1):
+	try:
+		directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testin
+		break
+	except:
+		pass
 #print socket.gethostname()
 directoryServer.listen(5)
 
@@ -108,7 +117,7 @@ while 1:
 	if "Client Request" == myData[0]:
 
 		# Select random routers to choose from.
-		while len(randomSelection) != 3:
+		while len(randomSelection) != 1:
 			randomNum = random.randrange(0, NUM_ROUTERS)
 			if randomNum not in randomSelection:
 				randomSelection.append(randomNum)
@@ -116,13 +125,15 @@ while 1:
 		# Develop and send message.
 		ips = pubkeyDict.keys()
 		keys = pubkeyDict.values()
-		message = ips[randomSelection[0]] + "," + keys[randomSelection[0]] + ","
-		message += ips[randomSelection[1]] + "," + keys[randomSelection[1]] + ","
-		message += ips[randomSelection[2]] + "," + keys[randomSelection[2]]
+		message = ips[randomSelection[0]] + "," + keys[randomSelection[0]]
+		#message += ips[randomSelection[1]] + "," + keys[randomSelection[1]] + ","
+		#message += ips[randomSelection[2]] + "," + keys[randomSelection[2]]
 		#encrypt message by importing client's public key
 		clientKey = RSA.importKey(myData[1])
-		encryptedMessage = clientKey.encrypt(message)
-		myClientSocket.send(encrypedMessage)
+		print(myData[1])
+		encryptedMessage = clientKey.encrypt(message,32)
+		print(encryptedMessage)
+		myClientSocket.send(str(encryptedMessage))
 		myClientSocket.close()
 
 directoryServer.close()

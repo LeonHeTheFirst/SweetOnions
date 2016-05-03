@@ -23,7 +23,7 @@ import hashlib
 DIR_PORT = 1600
 TCP_PORT = 1601
 BUFFER_SIZE = 4096
-DIR_NODE = '127.0.0.1' #change this
+DIR_NODE = '172.17.224.57' #change this
 
 
 private_key_file = "private.key"
@@ -49,7 +49,9 @@ else:
 try:
     key_file = open(private_key_file, "r").read()
     rsakey = RSA.importKey(key_file)
-    ownpubkey = rsakey.publickey().exportKey('PEM')
+    ownpubkey = open(public_key_file, "r").read()
+    print(ownpubkey)
+    #ownpubkey = rsakey.publickey().exportKey('PEM')
 except:
     print "failed to import keys"
     exit()
@@ -66,6 +68,8 @@ while 1:
 	if dir_data and "Not ready yet" in dir_data: 
             print("directory server not ready")
             exit()
+        else:
+            break
 	#sleep(1)
 s.close()
 
@@ -77,17 +81,21 @@ in_keys = []
 in_addr = []
 dir_arr = decrypted.split(',')
 for x in dir_arr:
-	if '.' in x:
-		in_addr.append(x)
-	else:
-		in_keys.append(x)
+    if '.' in x:
+        in_addr.append(x)
+    else:
+        in_keys.append(x)
 i = 0
-for x in random.shuffle(range(0,2)):
+y = range(0,1)
+random.shuffle(y)
+for x in y:
 	pubkeys[i] = RSA.importKey(in_keys[x])
 	node_addr[i+1] = in_addr[x]
 	i+=1
 node_addr[0] = dest_ip
 
+
+print("UP TO WRAPPING LAYERS")
 def wrap_layers(message, nodes, public_keys):
 	message = message + ',' + nodes[2] + ',' + nodes[1] + ',' + nodes[0]
 	for x in range(0,2):
