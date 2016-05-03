@@ -40,6 +40,7 @@ elif len(sys.argv) == 1:
         print "importing keys"
     except:
         print "importing keys failed"
+        exit()
 else:
     print "Incorrect arguments"
     sys.exit()

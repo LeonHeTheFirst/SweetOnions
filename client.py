@@ -29,7 +29,7 @@ private_key_file = "private.key"
 public_key_file = "public.key"
 
 # when the command line argument for generating a key pair is passed
-if len(sys.argv) == 2 and sys.argv[1] == "key":
+if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
     new_key = RSA.generate(2048, e=65537) 
     public_key = new_key.publickey().exportKey('PEM') 
     private_key = new_key.exportKey('PEM') 
@@ -40,14 +40,21 @@ if len(sys.argv) == 2 and sys.argv[1] == "key":
         content_file.write(public_key)
 elif len(sys.argv) == 1:
     print "importing keys"
+    try:
+        key_file = open(private_key_file, "r").read()
+        rsakey = RSA.importKey(key_file)
+        ownpubkey = rsakey.publickey().exportKey('PEM')
+    except:
+        print "failed to import keys"
+        exit()
 else:
     print "Incorrect arguments"
     sys.exit()
-
+'''
 key_file = open(private_key_file, "r").read()
 rsakey = RSA.importKey(key_file)
 ownpubkey = rsakey.publickey().exportKey('PEM')
-
+'''
 dest_ip = raw_input("Destination Address: ")
 mes =  raw_input("Message: ")
 mes_hash = hashlib.sha224(mes).hexdigest()
