@@ -10,6 +10,7 @@ from Crypto.PublicKey import RSA
 from Crypto import Random
 
 NUM_ROUTERS = 1
+NUM_NODES = 1
 
 routerCount = 0
 #onionRoutersDict = {}
@@ -98,6 +99,7 @@ for x in pubkeyDict.keys():
 time.sleep(1)
 
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+directoryServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 while (1):
 	try:
 		directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testin
@@ -117,7 +119,7 @@ while 1:
 	if "Client Request" == myData[0]:
 
 		# Select random routers to choose from.
-		while len(randomSelection) != 1:
+		while len(randomSelection) != NUM_NODES:
 			randomNum = random.randrange(0, NUM_ROUTERS)
 			if randomNum not in randomSelection:
 				randomSelection.append(randomNum)
@@ -125,17 +127,25 @@ while 1:
 		# Develop and send message.
 		ips = pubkeyDict.keys()
 		keys = pubkeyDict.values()
-		message = ips[randomSelection[0]] + "," + keys[randomSelection[0]]
-		#message += ips[randomSelection[1]] + "," + keys[randomSelection[1]] + ","
-		#message += ips[randomSelection[2]] + "," + keys[randomSelection[2]]
-		#encrypt message by importing client's public key
+		
+		message = ""
+		for x in range(NUM_NODES):
+			message += "," + ips[randomSelection[x]] + "," + keys[randomSelection[x]]
+		
+		message = message[1:]
+                #encrypt route by importing client's public key
 		clientKey = RSA.importKey(myData[1])
-		print(myData[1])
-		print(message)
+		
+		#################################################
+		#################################################
 		#encryptedMessage = clientKey.encrypt(message,32)
 		#print(encryptedMessage)
 		#print(encryptedMessage[0])
 		#myClientSocket.send(encryptedMessage[0])
+		#################################################
+		#################################################
+
+		#HAVE TO ADD ENCRYPTED AES KEY TO MESSAGE
 		myClientSocket.send(message)
 		myClientSocket.close()
 

@@ -21,16 +21,16 @@ import random
 import hashlib
 import base64
 
+NUM_NODES = 1
 DIR_PORT = 1600
 TCP_PORT = 1601
 BUFFER_SIZE = 4096
 DIR_NODE = '172.17.224.57' #change this
 
+TCP_IP = socket.gethostbyname(socket.gethostname())
 
 private_key_file = "private.key"
 public_key_file = "public.key"
-
-pubkeys = {}
 
 
 # when the command line argument for generating a key pair is passed
@@ -97,26 +97,36 @@ for x in range(len(dir_arr)/2):
         '''
     in_addr.append(dir_arr[2*x])
     in_keys.append(dir_arr[2*x + 1])
+
+##SHUFFLE NODES AGAIN
 i = 0
-y = range(0,1)
+y = range(NUM_NODES)
 random.shuffle(y)
-node_addr = [0,0]
+pubkeys = {}
+node_addr = [dest_ip]
 for x in y:
     pubkeys[i] = RSA.importKey(in_keys[x])
-    node_addr[i+1] = in_addr[x]
+    node_addr.append(in_addr[x])
     i+=1
-node_addr[0] = dest_ip
 
 
 print("UP TO WRAPPING LAYERS")
 def wrap_layers(message, nodes, public_keys):
-    message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
-    for x in range(0,1):
-        message = nodes[0] + ',' + message
-        if x == 0:
+    for x in nodes:
+        message += x
+        #message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
+    for x in range(len(nodes)):
+        message = nodes[x] + ',' + message
+        if x == len(nodes) - 1:
             message = message + ',' + 'entrance'
-        message = public_keys[x].encrypt(message, 32)
-    return message[0]
+
+        ###############################################
+        #message = public_keys[x].encrypt(message, 32)#
+        ###############################################
+        #HAVE TO ADD ENCRYPTED AES KEY TO EACH LAYER  #
+        ###############################################
+
+    return message
 
 mes = wrap_layers(mes, node_addr, pubkeys)
 
@@ -128,7 +138,7 @@ s.close()
 
 # Recieve Message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(("172.17.224.57", TCP_PORT))
+s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
 
 while 1:
