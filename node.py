@@ -56,7 +56,7 @@ except:
 # -----------------------------
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_IP, DIR_PORT))
-s.send('Onion Router,' + publicRSA)
+s.send('Onion Router###' + publicRSA)
 s.close()
 
 # Get Directory Data
@@ -72,7 +72,8 @@ myData = conn.recv(BUFFER_SIZE).split("###")
 print 'Connection address:', addr
 
 for x in range(NUM_NODES):
-	NODES[myData[2 * x]] = myData[2 * x + 1]
+    NODES[myData[2 * x]] = myData[2 * x + 1]
+    print myData[2 * x] + ":" + myData[2 * x + 1]
 
 conn.close()
 s.close()
