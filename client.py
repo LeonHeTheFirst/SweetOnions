@@ -68,7 +68,7 @@ mes_hash = hashlib.sha224(mes).hexdigest()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
 while 1:
-	s.send('Client Request,' + ownpubkey)
+	s.send('Client Request###' + ownpubkey)
 	dir_data = s.recv(BUFFER_SIZE)
         print(dir_data)
 	if dir_data and "Not ready yet" in dir_data: 
@@ -93,7 +93,9 @@ print(decryptedMsg)
 #code goes here
 in_keys = []
 in_addr = []
-dir_arr = dir_data.split('###')
+dir_arr = decryptedMsg.split('###')
+print("RECEIVED")
+print(dir_arr)
 for x in range(len(dir_arr)/2):
     '''
     if '.' in x:
@@ -108,10 +110,12 @@ for x in range(len(dir_arr)/2):
 i = 0
 y = range(NUM_NODES)
 random.shuffle(y)
-pubkeys = {}
+pubkeys = []
 node_addr = [dest_ip]
+print(in_keys)
+print(in_addr)
 for x in y:
-    pubkeys[i] = in_keys[x]
+    pubkeys.append(in_keys[x])
     node_addr.append(in_addr[x])
     i+=1
 

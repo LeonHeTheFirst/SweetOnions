@@ -113,8 +113,8 @@ while 1:
 		print("AES KEY ######################")
 		print(aesKey)
 		print("ENCRYPTED MESSAGE")
-		print(encryptedMsg)
 		encryptedMsg = encryptAES(aesKey, message)
+		print(encryptedMsg)
 		encryptedKey = clientKey.encrypt(aesKey, 32)[0]
 		toSend = encryptedMsg + "###" +encryptedKey
 		myClientSocket.send(toSend)
