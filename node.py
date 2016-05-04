@@ -140,8 +140,13 @@ while 1:
 		serverResponse = s.recv(BUFFER_SIZE)
 		s.close()
 		
-		returnRoute = decryptedMessage[3:].reverse()
+		returnRoute = decryptedMessage[3:]
+		returnRoute.reverse()
 		returnMessage = serverResponse
+		print "Return Route: "
+		print returnRoute
+		print decryptedMessage
+
 		for x in range(len(returnRoute)):
 			returnMessage = "###" + returnMessage
 			if x != 0:
