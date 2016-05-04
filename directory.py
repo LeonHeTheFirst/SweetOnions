@@ -62,7 +62,7 @@ message = ""
 for x in pubkeyDict.keys():                                                                                                
 	print(pubkeyDict.keys())
 	message += "###" + str(x) + "###" + str(pubkeyDict[x])
-message = message[3:]
+message = str(NUM_ROUTERS) + "###" + message[3:]
 for x in pubkeyDict.keys():
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                                                        
 	conn.connect((str(x), 1600))                                                                           
@@ -92,11 +92,12 @@ while 1:
 	if "Client Request" == myData[0]:
 
 		# Select random routers to choose from.
+		'''
 		while len(randomSelection) != NUM_NODES:
 			randomNum = random.randrange(0, NUM_ROUTERS)
 			if randomNum not in randomSelection:
 				randomSelection.append(randomNum)
-
+		
 		# Develop and send message.
 		ips = pubkeyDict.keys()
 		keys = pubkeyDict.values()
@@ -107,6 +108,7 @@ while 1:
 		
 		message = message[3:]
                 #encrypt route by importing client's public key
+		
 		clientKey = RSA.importKey(myData[1])
 		
 		aesKey = genAESKey()
@@ -118,6 +120,9 @@ while 1:
 		encryptedKey = clientKey.encrypt(aesKey, 32)[0]
 		toSend = encryptedMsg + "###" +encryptedKey
 		myClientSocket.send(toSend)
+		myClientSocket.close()
+		'''
+		myClientSocket.send(message)
 		myClientSocket.close()
 
 directoryServer.close()

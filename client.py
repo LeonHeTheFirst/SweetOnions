@@ -22,7 +22,7 @@ import hashlib
 import base64
 from aes_rsa import *
 
-NUM_NODES = 3
+#NUM_NODES = 3
 DIR_PORT = 1600
 TCP_PORT = 1601
 BUFFER_SIZE = 4096
@@ -30,6 +30,7 @@ DIR_NODE = '172.17.224.57' #change this
 
 TCP_IP = socket.gethostbyname(socket.gethostname())
 
+'''
 private_key_file = "private.key"
 public_key_file = "public.key"
 
@@ -61,14 +62,13 @@ try:
 except:
     print "failed to import keys"
     exit()
-
-dest_ip = raw_input("Destination Address: ")
-mes =  raw_input("Message: ")
+'''
+DIR_NODE = raw_input("Directory server to connect to: ")
 mes_hash = hashlib.sha224(mes).hexdigest()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
 while 1:
-	s.send('Client Request###' + ownpubkey)
+	s.send('Client Request###')# + ownpubkey)
 	dir_data = s.recv(BUFFER_SIZE)
         print(dir_data)
 	if dir_data and "Not ready yet" in dir_data: 
@@ -79,21 +79,28 @@ while 1:
 	#sleep(1)
 s.close()
 
-encMsg, encKey = dir_data.split("###")
+dest_ip = raw_input("Destination Address: ")
+mes =  raw_input("Message: ")
 
-decryptedKey = decryptRSA(key_file, encKey)
-print("ARGUMENTS")
-print(encMsg)
-print(decryptedKey)
-decryptedMsg = decryptAES(decryptedKey, encMsg)
-print(decryptedMsg)
+#encMsg, encKey = dir_data.split("###")
 
+#decryptedKey = decryptRSA(key_file, encKey)
+#print("ARGUMENTS")
+#print(encMsg)
+#print(decryptedKey)
+#decryptedMsg = decryptAES(decryptedKey, encMsg)
+#print(decryptedMsg)
+
+
+dir_arr = dir_data.split("###")
+NUM_ROUTERS = dir_arr[0]
+dir_arr = dir_arr[1:]
 
 #parse the directory data string
 #code goes here
 in_keys = []
 in_addr = []
-dir_arr = decryptedMsg.split('###')
+#dir_arr = decryptedMsg.split('###')
 print("RECEIVED")
 print(dir_arr)
 for x in range(len(dir_arr)/2):
@@ -106,17 +113,20 @@ for x in range(len(dir_arr)/2):
     in_addr.append(dir_arr[2*x])
     in_keys.append(dir_arr[2*x + 1])
 
+
+NUM_NODES = random.randint(2, NUM_ROUTERS)
 ##SHUFFLE NODES AGAIN
 i = 0
-y = range(NUM_NODES)
+y = range(NUM_ROUTERS)
 random.shuffle(y)
 pubkeys = []
 node_addr = [dest_ip]
 print(in_keys)
 print(in_addr)
-for x in y:
-    pubkeys.append(in_keys[x])
-    node_addr.append(in_addr[x])
+#for x in y:
+while i < NUM_NODES:
+    pubkeys.append(in_keys[y[i]])
+    node_addr.append(in_addr[y[i]])
     i+=1
 
 
@@ -131,7 +141,7 @@ def wrap_layers(message, nodes, public_keys):
         if x == len(nodes) - 2:
             message = message + '###' + 'entrance'
 
-        encryptedKey, encryptedMsg = easyEncrypt(pubkeys[x], message)
+        encryptedKey, encryptedMsg = easyEncrypt(public_keys[x], message)
         message = encryptedMsg + "###" + encryptedKey
         
     return message

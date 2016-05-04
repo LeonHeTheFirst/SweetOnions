@@ -12,7 +12,7 @@ import sys
 from os import chmod
 from aes_rsa import *
 
-DIR_IP = '172.17.224.57'
+#DIR_IP = '172.17.224.57'
 DIR_PORT = 1600
 
 TCP_IP = socket.gethostbyname(socket.gethostname())
@@ -51,6 +51,7 @@ except:
     print "importing keys failed"
     exit()
 
+DIR_IP = raw_input("Directory server to connect to: ")
 
 # Update Directory
 # -----------------------------
@@ -68,6 +69,9 @@ s.listen(1)
 conn, addr = s.accept()
 addr = addr[0]
 myData = conn.recv(BUFFER_SIZE).split("###")
+
+NUM_NODES = myData[0]
+myData = myData[1:]
 
 print 'Connection address:', addr
 
