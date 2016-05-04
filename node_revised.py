@@ -67,7 +67,7 @@ s.listen(1)
 
 conn, addr = s.accept()
 addr = addr[0]
-myData = conn.recv(BUFFER_SIZE).split(",")
+myData = conn.recv(BUFFER_SIZE).split("###")
 
 print 'Connection address:', addr
 
@@ -98,8 +98,8 @@ while 1:
 	if not data: break
 	print "[Node Running] Received data: ", data
 
-	myEncryptedData = data.split(",")
-	decryptedMessage = decryptAESRSA(myEncryptedData[1], privateRSA, myEncryptedData[0]).split(",")
+	myEncryptedData = data.split("###")
+	decryptedMessage = decryptAESRSA(myEncryptedData[1], privateRSA, myEncryptedData[0]).split("###")
 	nextNode = decryptedMessage[0]
 
 	# Entrance Node Case
@@ -114,7 +114,7 @@ while 1:
 	# Send to Next Node
 	if nextNode in NODES:  
 		s.connect((nextNode, TCP_PORT))
-		s.send(decryptedMessage[1] + "," + decryptedMessage[2])
+		s.send(decryptedMessage[1] + "###" + decryptedMessage[2])
 		s.close()
 		
 	# Entrance Node
@@ -142,11 +142,11 @@ while 1:
 		returnRoute = decryptedMessage[3:].reverse()
 		returnMessage = serverResponse
 		for x in range(len(returnRoute)):
-			returnMessage = "," + returnMessage
+			returnMessage = "###" + returnMessage
 			if x != 0:
 				returnMessage = returnRoute[x-1] + returnMessage
 			encryptedKey, encryptedMsg = easyEncrypt(NODES[returnRoute[x]], returnMessage)
-			returnMessage = encryptedMsg + "," + encryptedKey
+			returnMessage = encryptedMsg + "###" + encryptedKey
 			
 		
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
