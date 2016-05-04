@@ -35,7 +35,7 @@ print socket.gethostname()
 directoryServer.listen(5)
 
 # Begin listening
-while len(pubkeyDict) < NUM_ROUTERS:
+while routerCount < NUM_ROUTERS:
 	myClientSocket, myClientAddress = directoryServer.accept()
 	myClientAddress = myClientAddress[0]
 	dataReceived = myClientSocket.recv(1024)
@@ -50,8 +50,9 @@ while len(pubkeyDict) < NUM_ROUTERS:
 		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
 	elif myData[0].strip() == "Client Request":
 		myClientSocket.send("Not ready yet")
-	
+	print(pubkeyDict)
 	myClientSocket.close()
+print(pubkeyDict)
 
 directoryServer.close()
 time.sleep(1)
