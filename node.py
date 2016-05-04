@@ -68,7 +68,7 @@ conn, addr = s.accept()
 addr = addr[0]
 data = conn.recv(BUFFER_SIZE)
 #decrypted = privRSAkey.decrypt(data)
-dataArr = data.split(",")
+dataArr = data.split("###")
 for x in range(1):
     NODES[dataArr[2 * x]] = dataArr[2 * x + 1]
 conn.close()
@@ -89,7 +89,7 @@ while 1:
     if not data: break
     print "received data:", data
     decrypted = privRSAkey.decrypt(data)
-    dataArr = decrypted.split(",")
+    dataArr = decrypted.split("###")
     nextNode = dataArr[0]
     payload = dataArr[1]
 

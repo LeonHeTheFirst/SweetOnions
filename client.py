@@ -79,7 +79,7 @@ while 1:
 	#sleep(1)
 s.close()
 
-encMsg, encKey = dir_data.split(",")
+encMsg, encKey = dir_data.split("###")
 
 decryptedKey = decryptRSA(key_file, encKey)
 print("ARGUMENTS")
@@ -93,7 +93,7 @@ print(decryptedMsg)
 #code goes here
 in_keys = []
 in_addr = []
-dir_arr = dir_data.split(',')
+dir_arr = dir_data.split('###')
 for x in range(len(dir_arr)/2):
     '''
     if '.' in x:
@@ -120,15 +120,15 @@ print("UP TO WRAPPING LAYERS")
 # front of nodes is server ip, back of nodes is entrance node
 def wrap_layers(message, nodes, public_keys):
     for x in nodes[1:]:
-        message += "," + x
+        message += "###" + x
         #message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
     for x in range(len(nodes) - 1):
-        message = nodes[x] + ',' + message
+        message = nodes[x] + '###' + message
         if x == len(nodes) - 2:
-            message = message + ',' + 'entrance'
+            message = message + '###' + 'entrance'
 
         encryptedKey, encryptedMsg = easyEncrypt(pubkeys[x], message)
-        message = encryptedMsg + "," + encryptedKey
+        message = encryptedMsg + "###" + encryptedKey
         
     return message
 

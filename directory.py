@@ -42,7 +42,7 @@ while len(pubkeyDict) < NUM_ROUTERS:
 	print(myClientAddress)
 	print(dataReceived)
 	# Initialization: Communicate with all onion routers until all keys are stored.	
-	myData = dataReceived.split(",")
+	myData = dataReceived.split("###")
 	if myData[0].strip() == "Onion Router":
 		#pubkeyDict[routerCount] = myClientAddress + ", " + myData[1].strip()
 		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
@@ -60,8 +60,8 @@ time.sleep(1)
 message = ""                                                 
 for x in pubkeyDict.keys():                                                                                                
 	print(pubkeyDict.keys())
-	message += "," + str(x) + "," + str(pubkeyDict[x])
-message = message[1:]
+	message += "###" + str(x) + "###" + str(pubkeyDict[x])
+message = message[3:]
 for x in pubkeyDict.keys():
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                                                        
 	conn.connect((str(x), 1600))                                                                           
@@ -86,7 +86,7 @@ while 1:
 	myClientAddress = myClientAddress[0]
         dataReceived = myClientSocket.recv(1024)
 	
-	myData = dataReceived.split(",")
+	myData = dataReceived.split("###")
 	# Initialization complete. 
 	if "Client Request" == myData[0]:
 
@@ -102,16 +102,20 @@ while 1:
 		
 		message = ""
 		for x in range(NUM_NODES):
-			message += "," + ips[randomSelection[x]] + "," + keys[randomSelection[x]]
+			message += "###" + ips[randomSelection[x]] + "###" + keys[randomSelection[x]]
 		
-		message = message[1:]
+		message = message[3:]
                 #encrypt route by importing client's public key
 		clientKey = RSA.importKey(myData[1])
 		
 		aesKey = genAESKey()
+		print("AES KEY ######################")
+		print(aesKey)
+		print("ENCRYPTED MESSAGE")
+		print(encryptedMsg)
 		encryptedMsg = encryptAES(aesKey, message)
 		encryptedKey = clientKey.encrypt(aesKey, 32)[0]
-		toSend = encryptedMsg + "," +encryptedKey
+		toSend = encryptedMsg + "###" +encryptedKey
 		myClientSocket.send(toSend)
 		myClientSocket.close()
 
