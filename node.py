@@ -20,7 +20,7 @@ TCP_PORT = 1601
 
 BUFFER_SIZE = 4096 
 NODES = {}
-NUM_NODES = 2
+NUM_NODES = 3
 
 # Generate RSA Keys
 # -----------------------------
