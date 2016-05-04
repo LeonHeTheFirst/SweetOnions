@@ -80,8 +80,12 @@ while 1:
 s.close()
 
 encMsg, encKey = dir_data.split(",")
+
 decryptedKey = decryptRSA(key_file, encKey)
-decryptedMsg = decryptAES(encMsg, decryptedKey)
+print("ARGUMENTS")
+print(encMsg)
+print(decryptedKey)
+decryptedMsg = decryptAES(decryptedKey, encMsg)
 print(decryptedMsg)
 
 
