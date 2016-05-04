@@ -114,6 +114,9 @@ while 1:
 
 	# Send to Next Node
 	if nextNode in NODES:  
+		conn.close()
+                s.close()
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1] + "###" + decryptedMessage[2])
 		s.close()
