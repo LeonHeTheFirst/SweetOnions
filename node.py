@@ -70,7 +70,7 @@ conn, addr = s.accept()
 addr = addr[0]
 myData = conn.recv(BUFFER_SIZE).split("###")
 
-NUM_NODES = myData[0]
+NUM_NODES = int(myData[0])
 myData = myData[1:]
 
 print 'Connection address:', addr
