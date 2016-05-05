@@ -23,6 +23,7 @@ directoryServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing
 directoryServer.listen(5)
 
+print("")
 # Begin listening
 while routerCount < NUM_ROUTERS:
 	myClientSocket, myClientAddress = directoryServer.accept()
@@ -35,14 +36,16 @@ while routerCount < NUM_ROUTERS:
 		#pubkeyDict[routerCount] = myClientAddress + ", " + myData[1].strip()
 		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
 		routerCount = routerCount + 1
-		print "Onion Router Information Received [" + myClientAddress + "] - [" + dataReceived + "]"
+		print "Onion Router Information Received"
+		print(myData[1])
+		print("")
 	elif myData[0].strip() == "Client Request":
 		myClientSocket.send("Not ready yet")
 	myClientSocket.close()
 
 print("Dictionary of nodes:")
 for x in pubkeyDict:
-	print(x + " :: " + pubkeyDict[x])
+	print(x + " : " + pubkeyDict[x])
 
 directoryServer.close()
 time.sleep(1)
