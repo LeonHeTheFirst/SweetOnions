@@ -31,13 +31,13 @@ publicKeyFile = "publicRSA.key"
 
 if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
     print "Generating RSA key pair."
-	RSAKeys = genRSAKey()
-	with open(privateKeyFile, 'w') as myContent:
-		chmod(privateKeyFile, 0600)
-		myContent.write(RSAKeys[1])
-	with open(publicKeyFile, 'w') as myContent:
-		chmod(privateKeyFile, 0600)
-		myContent.write(RSAKeys[0])
+    RSAKeys = genRSAKey()
+    with open(privateKeyFile, 'w') as myContent:
+        chmod(privateKeyFile, 0600)
+        myContent.write(RSAKeys[1])
+    with open(publicKeyFile, 'w') as myContent:
+        chmod(privateKeyFile, 0600)
+        myContent.write(RSAKeys[0])
 
 elif len(sys.argv) == 1:
     print "importing keys"   
