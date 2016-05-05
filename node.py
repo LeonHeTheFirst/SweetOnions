@@ -114,9 +114,9 @@ while 1:
 		entranceAddr = addr
         if decryptedMessage[3] == "entrance":
             print "This is the entrance node receiving initial packet."
-		conn.close()
-		s.close()
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            conn.close()
+            s.close()
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 	# Send to Next Node
 	if nextNode in NODES:
