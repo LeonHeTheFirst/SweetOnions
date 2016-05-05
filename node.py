@@ -112,11 +112,11 @@ while 1:
 	if len(decryptedMessage) == 4:
 		entranceFlag = decryptedMessage[3]
 		entranceAddr = addr
-        if decryptedMessage[3] == "entrance":
-            print "This is the entrance node receiving initial packet."
-            conn.close()
-            s.close()
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		if decryptedMessage[3] == "entrance":
+			print "This is the entrance node receiving initial packet."
+		conn.close()
+		s.close()
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 	# Send to Next Node
 	if nextNode in NODES:
