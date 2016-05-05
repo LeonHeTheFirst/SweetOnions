@@ -126,7 +126,7 @@ while 1:
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1] + "###" + decryptedMessage[2])
 		s.close()
-                print "This is a middle node. Nothing special here."
+		print "This is not an exit node. Nothing special here."
 		
 	# Entrance Node
 	elif entranceFlag == "entrance" and not nextNode:
