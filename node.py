@@ -121,8 +121,8 @@ while 1:
 	# Send to Next Node
 	if nextNode in NODES:
 		conn.close()
-                s.close()
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.close()
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1] + "###" + decryptedMessage[2])
 		s.close()
@@ -132,8 +132,8 @@ while 1:
 	elif entranceFlag == "entrance" and not nextNode:
 
 		conn.close()
-                s.close()
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.close()
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((entranceAddr, TCP_PORT))
 		# original's server response (at least it's supposed to be)
 		s.send(decryptedMessage[1])
@@ -146,7 +146,7 @@ while 1:
 	elif nextNode not in NODES:
 		conn.close()
 		s.close()
-                print "This is the exit node."
+		print "This is the exit node."
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, 80))
 		s.send(decryptedMessage[1])
