@@ -29,93 +29,47 @@ BUFFER_SIZE = 4096
 DIR_NODE = '172.17.224.57' #change this
 
 TCP_IP = socket.gethostbyname(socket.gethostname())
-
-'''
-private_key_file = "private.key"
-public_key_file = "public.key"
-
-
-# when the command line argument for generating a key pair is passed
-if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
-    new_key = RSA.generate(2048, e=65537) 
-    public_key = new_key.publickey().exportKey('PEM') 
-    private_key = new_key.exportKey('PEM') 
-    with open(private_key_file, 'w') as content_file:
-        chmod(private_key_file, 0600)
-        content_file.write(private_key)
-    with open(public_key_file, 'w') as content_file:
-        content_file.write(public_key)
-elif len(sys.argv) == 1:
-    print "importing keys"
-    
-else:
-    print "Incorrect arguments"
-    sys.exit()
-
-try:
-    key_file = open(private_key_file, "r").read()
-    rsakey = RSA.importKey(key_file)
-    #print("rsa prive key: " + rsakey)
-    ownpubkey = open(public_key_file, "r").read()
-    print(ownpubkey)
-    #ownpubkey = rsakey.publickey().exportKey('PEM')
-except:
-    print "failed to import keys"
-    exit()
-'''
 DIR_NODE = raw_input("Directory server to connect to: ")
 
+
+# Connect to directory
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
-while 1:
-	s.send('Client Request###')# + ownpubkey)
-	dir_data = s.recv(BUFFER_SIZE)
-        print(dir_data)
-	if dir_data and "Not ready yet" in dir_data: 
-            print("directory server not ready")
-            exit()
-        else:
-            break
-	#sleep(1)
+s.send('Client Request###')
+dir_data = s.recv(BUFFER_SIZE)
+print(dir_data)
+if dir_data and "Not ready yet" in dir_data: 
+	print("directory server not ready")
+	exit()
+else:
+	break
 s.close()
 
+# Get the destination server and message
 dest_ip = raw_input("Destination Address: ")
 mes =  raw_input("Message: ")
+
+# Save the hash of the message for integrity
 mes_hash = hashlib.sha224(mes).hexdigest()
-#encMsg, encKey = dir_data.split("###")
-
-#decryptedKey = decryptRSA(key_file, encKey)
-#print("ARGUMENTS")
-#print(encMsg)
-#print(decryptedKey)
-#decryptedMsg = decryptAES(decryptedKey, encMsg)
-#print(decryptedMsg)
 
 
+# Parse response from the directory
 dir_arr = dir_data.split("###")
 NUM_ROUTERS = int(dir_arr[0])
 dir_arr = dir_arr[1:]
 
-#parse the directory data string
-#code goes here
+# parse the directory data string
 in_keys = []
 in_addr = []
-#dir_arr = decryptedMsg.split('###')
 print("RECEIVED")
 print(dir_arr)
 for x in range(len(dir_arr)/2):
-    '''
-    if '.' in x:
-        in_addr.append(x)
-    else:
-        in_keys.append(x)
-        '''
     in_addr.append(dir_arr[2*x])
     in_keys.append(dir_arr[2*x + 1])
 
 
+# Generate a random route
 NUM_NODES = random.randint(2, NUM_ROUTERS)
-##SHUFFLE NODES AGAIN
 i = 0
 y = range(NUM_ROUTERS)
 random.shuffle(y)
@@ -135,7 +89,6 @@ print("UP TO WRAPPING LAYERS")
 def wrap_layers(message, nodes, public_keys):
     for x in nodes[1:]:
         message += "###" + x
-        #message = message + ',' + nodes[0]# + ',' + nodes[1] + ',' + nodes[0]
     for x in range(len(nodes) - 1):
         message = nodes[x] + '###' + message
         if x == len(nodes) - 2:
@@ -143,10 +96,9 @@ def wrap_layers(message, nodes, public_keys):
 
         encryptedKey, encryptedMsg = easyEncrypt(public_keys[x], message)
         message = encryptedMsg + "###" + encryptedKey
-        
     return message
-
 message = wrap_layers(mes, node_addr, pubkeys)
+
 
 # Send Message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -164,6 +116,8 @@ while 1:
         addr = addr[0]
 	if addr == node_addr[len(node_addr) - 1]:
 		data = conn.recv(BUFFER_SIZE)
+		print("Data Receieved:")
+		print(data)
 		if data == mes_hash:
 			print "Received data matches hash: ", data
 			break

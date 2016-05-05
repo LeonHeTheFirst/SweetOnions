@@ -24,21 +24,24 @@ directoryServer.bind((DIR_IP, 1600)) #'127.0.0.1' for testing
 directoryServer.listen(5)
 
 print("")
-# Begin listening
+# Begin listening for onion routers
 while routerCount < NUM_ROUTERS:
 	myClientSocket, myClientAddress = directoryServer.accept()
 	myClientAddress = myClientAddress[0]
 	dataReceived = myClientSocket.recv(1024)
 	print("Connection from: " + myClientAddress)
+	
 	# Initialization: Communicate with all onion routers until all keys are stored.	
 	myData = dataReceived.split("###")
 	if myData[0].strip() == "Onion Router":
-		#pubkeyDict[routerCount] = myClientAddress + ", " + myData[1].strip()
+		
 		pubkeyDict[myClientAddress] = myData[1].strip() #add to the dictionary
 		routerCount = routerCount + 1
 		print "Onion Router Information Received"
 		print(myData[1])
 		print("")
+	
+	# If a client connects too early, tell it...
 	elif myData[0].strip() == "Client Request":
 		myClientSocket.send("Not ready yet")
 	myClientSocket.close()
@@ -50,7 +53,7 @@ for x in pubkeyDict:
 directoryServer.close()
 time.sleep(1)
 
-#sending serialized dictionary to all nodes
+#Sending serialized dictionary to all nodes
 message = ""                                                 
 for x in pubkeyDict.keys():
 	message += "###" + str(x) + "###" + str(pubkeyDict[x])
@@ -63,6 +66,7 @@ for x in pubkeyDict.keys():
 
 time.sleep(1)
 
+# Make sure socket is closed
 directoryServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 directoryServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 while (1):
@@ -74,7 +78,7 @@ while (1):
 	
 directoryServer.listen(5)
 
-# wait for clients to connect
+# Wait for clients to connect
 while 1:
 	myClientSocket, myClientAddress = directoryServer.accept()
 	myClientAddress = myClientAddress[0]
@@ -86,6 +90,7 @@ while 1:
 
 		# Send client the dictionary of nodes as well
 		myClientSocket.send(message)
-		myClientSocket.close()
+	
+	myClientSocket.close()
 
 directoryServer.close()
