@@ -24,7 +24,7 @@ _Machine 6_: python server.py
 
 ## Demo
 ------
-The following is a video demo of SweetOnions running across six machines: https://www.youtube.com/playlist?list=PL5LAC8RggSqaMTf84fbQCePw-RbbWqMP2
+The following is a video demo of SweetOnions running across six machines: https://www.youtube.com/playlist?list=PLPNnD5CzODl0AT8zfREUCfGqaUXMoN9Dm
 
 ## How it Works
 ------
