@@ -4,7 +4,7 @@ The purpose of SweetOnions is to emulate a smaller-scale version of onion routin
 
 ## Installation
 ------
-Requires pycrypto and Python 2.7
+Requires pycrypto (https://www.dlitz.net/software/pycrypto/) and Python 2.7
 
 ## Usage
 ------
