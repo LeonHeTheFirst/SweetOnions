@@ -64,7 +64,7 @@ except:
     exit()
 '''
 DIR_NODE = raw_input("Directory server to connect to: ")
-mes_hash = hashlib.sha224(mes).hexdigest()
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((DIR_NODE, DIR_PORT))
 while 1:
@@ -81,7 +81,7 @@ s.close()
 
 dest_ip = raw_input("Destination Address: ")
 mes =  raw_input("Message: ")
-
+mes_hash = hashlib.sha224(mes).hexdigest()
 #encMsg, encKey = dir_data.split("###")
 
 #decryptedKey = decryptRSA(key_file, encKey)
@@ -93,7 +93,7 @@ mes =  raw_input("Message: ")
 
 
 dir_arr = dir_data.split("###")
-NUM_ROUTERS = dir_arr[0]
+NUM_ROUTERS = int(dir_arr[0])
 dir_arr = dir_arr[1:]
 
 #parse the directory data string

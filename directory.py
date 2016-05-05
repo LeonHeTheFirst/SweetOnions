@@ -10,7 +10,7 @@ from Crypto.PublicKey import RSA
 from Crypto import Random
 from aes_rsa import *
 
-NUM_ROUTERS = 3
+NUM_ROUTERS = int(raw_input("Number of routers before running: "))
 NUM_NODES = 3
 
 routerCount = 0
