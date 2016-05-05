@@ -1,6 +1,6 @@
 # SweetOnions - Making Onion Routing Great Again
 ------
-The purpose of SweetOnions is to emulate a smaller-scale version of onion routing using Python 2.7. There will be a client, server, directory, and three onion routing nodes through which the client can send and recieve encrypted messages. Each message uses asymmetric encryption - the message itself is encrypted with 192-bit AES and subsequently encrypted with 2048-RSA to ensure the sender is anonymized. 
+The purpose of SweetOnions is to emulate a smaller-scale version of onion routing using Python 2.7. There will be a client, server, directory, and three onion routing nodes through which the client can send and recieve encrypted messages. Each message uses asymmetric encryption - the message itself is encrypted with 192-bit AES and the AES key is subsequently encrypted with 2048-RSA to ensure the sender is anonymized. 
 
 ## Installation
 ------
