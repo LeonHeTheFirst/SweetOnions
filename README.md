@@ -9,13 +9,12 @@ Requires pycrypto and Python 2.7
 ## Usage
 ------
 This tool requires a minimum of five machines (2 onion routing nodes) and six machines (3 onion routing nodes) to operate in order to simulate a TOR/onion routing network. The machines should be running as follows:
-Machine 1: python client.py
--- This will request the user to enter the directory node's IP address as well as the message the user would like to send.
-Machine 2: python directory.py 
+
+Machine 1: python client.py (This will request the user to enter the directory node's IP address as well as the message the user would like to send)
+Machine 2: python directory.py
 Machine 3: python node.py -genKey
 Machine 4: python node.py -genKey
-Machine 5: python node.py -genKey (Optional)
--- Each node will will request the directory node's IP address.
+Machine 5: python node.py -genKey (Each node will request the directory node's IP address) [Optional Machine]
 Machine 6: python server.py
 
 ## How it Works
@@ -34,9 +33,9 @@ c) Concatenate the two encrypted messages - this is the inner most layer and the
 
 By the end of the encryption scheme, the following is the result:
 
-Layer 1: AES[message + DestinationIP] + RSA[Node3_AESKey] 
-Layer 2: AES[AES[message + DesinationIP] + RSA[Node3_AESKey] + Node3_IP] + RSA[Node2_AESKey]
-Layer 3: AES[AES[AES[message + DestinationIP] + RSA[Node3_AESKey] + Node2_IP] + RSA[Node2_AESKey] + Node1_IP] + RSA[Node1_AESKey]
+_Layer 1_: AES[message + DestinationIP] + RSA[Node3_AESKey]
+_Layer 2_: AES[AES[message + DesinationIP] + RSA[Node3_AESKey] + Node3_IP] + RSA[Node2_AESKey]
+_Layer 3_: AES[AES[AES[message + DestinationIP] + RSA[Node3_AESKey] + Node2_IP] + RSA[Node2_AESKey] + Node1_IP] + RSA[Node1_AESKey]
 
 It is the each node's responsibility to unwrap each layer via its RSA private key and continue to send the message along.
 
@@ -48,11 +47,11 @@ The directory node is designed to send the client (upon request) the list of nod
 ------
 This represents each onion routing node (and has cases for both entrance and exit nodes) and must unwrap one layer of encryption and send the message along. The decryption occurs as follows:
 
-Message Sent to Node: AES[AES[message + DesinationIP] + RSA[Node3_AESKey] + Node3_IP] + RSA[Node2_AESKey]
+_Message Sent to Node_: AES[AES[message + DesinationIP] + RSA[Node3_AESKey] + Node3_IP] + RSA[Node2_AESKey]
 
 Node 2 uses its private RSA key to obtain the AES Key, and then uses that AES Key to encrypt the remaining contents. The result is:
 
-Message Node 2 Sends to Node 3: AES[message + DesinationIP] + RSA[Node3_AESKey]
+_Message Node 2 Sends to Node 3_: AES[message + DesinationIP] + RSA[Node3_AESKey]
 
 ### 4. server.py
 ------
