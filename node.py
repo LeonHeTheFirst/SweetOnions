@@ -148,7 +148,7 @@ while 1:
 		s.close()
 		print "This is the exit node."
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.connect((nextNode, 80))
+		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1])
 
 		serverResponse = s.recv(BUFFER_SIZE)
