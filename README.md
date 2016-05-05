@@ -2,9 +2,14 @@
 ------
 The purpose of SweetOnions is to emulate a smaller-scale version of onion routing using Python 2.7. There will be a client, server, directory, and three onion routing nodes through which the client can send and recieve encrypted messages. Each message uses asymmetric encryption - the message itself is encrypted with 192-bit AES and subsequently encrypted with 2048-RSA to ensure the sender is anonymized. 
 
+# Installation
+------
+
+
+
 ## How it Works
 ------
-This tool requires a minimum of six machines to operate in order to simulate a TOR/onion routing network:
+This tool requires a minimum of five machines (2 onion routing nodes) and six machines (3 onion routing nodes) to operate in order to simulate a TOR/onion routing network:
 
 ### 1. client.py
 ------
@@ -41,6 +46,3 @@ Message Node 2 Sends to Node 3: AES[message + DesinationIP] + RSA[Node3_AESKey]
 ### 4. server.py
 ------
 The purpose of server is to simply recieve messages and send the hashed version of the message back to the original exit node. 
-
-
-
