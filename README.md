@@ -10,17 +10,17 @@ Requires pycrypto and Python 2.7
 ------
 This tool requires a minimum of five machines (2 onion routing nodes) and six machines (3 onion routing nodes) to operate in order to simulate a TOR/onion routing network. The machines should be running as follows:
 
-Machine 1: python client.py (This will request the user to enter the directory node's IP address as well as the message the user would like to send)
+_Machine 1_: python client.py (This will request the user to enter the directory node's IP address as well as the message the user would like to send)
 
-Machine 2: python directory.py
+_Machine 2_: python directory.py
 
-Machine 3: python node.py -genKey
+_Machine 3_: python node.py -genKey
 
-Machine 4: python node.py -genKey
+_Machine 4_: python node.py -genKey
 
-Machine 5: python node.py -genKey (Each node will request the directory node's IP address) [Optional Machine]
+_Machine 5_: python node.py -genKey (Each node will request the directory node's IP address) [Optional Machine]
 
-Machine 6: python server.py
+_Machine 6_: python server.py
 
 ## How it Works
 ------
@@ -33,13 +33,17 @@ This is the front-end tool that allows users to send and recieve messages from t
 The client must first contact the directory node in order to recieve a list of potential onion routing nodes and their RSA public keys. The client will randomly select the path through which the message will be sent, and it will encrypt the message in the following manner, where Node 3 is the exit node and Node 1 is the entrance node:
 
 a) AES Encrypt via Node 3's AES Key the following: [message + Node3_IP]
+
 b) RSA Encrypt Node 3's AES Key with Node 3's public RSA key: [Node3_AESKey]
+
 c) Concatenate the two encrypted messages - this is the inner most layer and the process will repeat two more times.
 
 By the end of the encryption scheme, the following is the result:
 
 _Layer 1_: AES[message + DestinationIP] + RSA[Node3_AESKey]
+
 _Layer 2_: AES[AES[message + DesinationIP] + RSA[Node3_AESKey] + Node3_IP] + RSA[Node2_AESKey]
+
 _Layer 3_: AES[AES[AES[message + DestinationIP] + RSA[Node3_AESKey] + Node2_IP] + RSA[Node2_AESKey] + Node1_IP] + RSA[Node1_AESKey]
 
 It is the each node's responsibility to unwrap each layer via its RSA private key and continue to send the message along.
