@@ -41,8 +41,6 @@ print(dir_data)
 if dir_data and "Not ready yet" in dir_data: 
 	print("directory server not ready")
 	exit()
-else:
-	break
 s.close()
 
 # Get the destination server and message
@@ -75,9 +73,6 @@ y = range(NUM_ROUTERS)
 random.shuffle(y)
 pubkeys = []
 node_addr = [dest_ip]
-print(in_keys)
-print(in_addr)
-#for x in y:
 while i < NUM_NODES:
     pubkeys.append(in_keys[y[i]])
     node_addr.append(in_addr[y[i]])
@@ -98,7 +93,7 @@ def wrap_layers(message, nodes, public_keys):
         message = encryptedMsg + "###" + encryptedKey
     return message
 message = wrap_layers(mes, node_addr, pubkeys)
-
+print(message)
 
 # Send Message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -116,8 +111,6 @@ while 1:
         addr = addr[0]
 	if addr == node_addr[len(node_addr) - 1]:
 		data = conn.recv(BUFFER_SIZE)
-		print("Data Receieved:")
-		print(data)
 		if data == mes_hash:
 			print "Received data matches hash: ", data
 			break
