@@ -10,17 +10,17 @@ Requires pycrypto and Python 2.7
 ------
 This tool requires a minimum of five machines (2 onion routing nodes) and six machines (3 onion routing nodes) to operate in order to simulate a TOR/onion routing network. The machines should be running as follows:
 
-Machine 1: python client.py (This will request the user to enter the directory node's IP address as well as the message the user would like to send)
+_Machine 1_: python client.py (This will request the user to enter the directory node's IP address as well as the message the user would like to send)
 
-Machine 2: python directory.py
+_Machine 2_: python directory.py
 
-Machine 3: python node.py -genKey
+_Machine 3_: python node.py -genKey
 
-Machine 4: python node.py -genKey
+_Machine 4_: python node.py -genKey
 
-Machine 5: python node.py -genKey (Each node will request the directory node's IP address) [Optional Machine]
+_Machine 5_: python node.py -genKey (Each node will request the directory node's IP address) [Optional Machine]
 
-Machine 6: python server.py
+_Machine 6_: python server.py
 
 ## How it Works
 ------
@@ -39,7 +39,9 @@ c) Concatenate the two encrypted messages - this is the inner most layer and the
 By the end of the encryption scheme, the following is the result:
 
 _Layer 1_: AES[message + DestinationIP] + RSA[Node3_AESKey]
+
 _Layer 2_: AES[AES[message + DesinationIP] + RSA[Node3_AESKey] + Node3_IP] + RSA[Node2_AESKey]
+
 _Layer 3_: AES[AES[AES[message + DestinationIP] + RSA[Node3_AESKey] + Node2_IP] + RSA[Node2_AESKey] + Node1_IP] + RSA[Node1_AESKey]
 
 It is the each node's responsibility to unwrap each layer via its RSA private key and continue to send the message along.
