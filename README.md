@@ -11,10 +11,15 @@ Requires pycrypto and Python 2.7
 This tool requires a minimum of five machines (2 onion routing nodes) and six machines (3 onion routing nodes) to operate in order to simulate a TOR/onion routing network. The machines should be running as follows:
 
 Machine 1: python client.py (This will request the user to enter the directory node's IP address as well as the message the user would like to send)
+
 Machine 2: python directory.py
+
 Machine 3: python node.py -genKey
+
 Machine 4: python node.py -genKey
+
 Machine 5: python node.py -genKey (Each node will request the directory node's IP address) [Optional Machine]
+
 Machine 6: python server.py
 
 ## How it Works
