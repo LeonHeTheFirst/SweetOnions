@@ -146,7 +146,7 @@ while 1:
 	elif nextNode not in NODES:
 		conn.close()
 		s.close()
-        print "This is the exit node."
+                print "This is the exit node."
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1])
@@ -159,7 +159,7 @@ while 1:
 		returnMessage = serverResponse
 		print "Return Route: "
 		print returnRoute
-        print "Decrypted Message:"
+                print "Decrypted Message:"
 		print decryptedMessage
 
 		for x in range(len(returnRoute)):
