@@ -30,6 +30,7 @@ privateKeyFile = "privateRSA.key"
 publicKeyFile = "publicRSA.key"
 
 if len(sys.argv) == 2 and sys.argv[1] == "-genKey":
+    print "Generating RSA key pair."
 	RSAKeys = genRSAKey()
 	with open(privateKeyFile, 'w') as myContent:
 		chmod(privateKeyFile, 0600)
@@ -52,7 +53,7 @@ except:
     exit()
 
 DIR_IP = raw_input("Directory server to connect to: ")
-
+print "Sending request to directory server."
 # Update Directory
 # -----------------------------
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -74,7 +75,7 @@ NUM_NODES = int(myData[0])
 myData = myData[1:]
 
 print 'Connection address:', addr
-
+print "Return data from directory server: "
 for x in range(NUM_NODES):
     NODES[myData[2 * x]] = myData[2 * x + 1]
     print myData[2 * x] + ":" + myData[2 * x + 1]
@@ -111,19 +112,21 @@ while 1:
 	if len(decryptedMessage) == 4:
 		entranceFlag = decryptedMessage[3]
 		entranceAddr = addr
-
+        if decryptedMessage[3] == "entrance":
+            print "This is the entrance node receiving initial packet."
 		conn.close()
 		s.close()
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 	# Send to Next Node
-	if nextNode in NODES:  
+	if nextNode in NODES:
 		conn.close()
                 s.close()
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1] + "###" + decryptedMessage[2])
 		s.close()
+        print "This is a middle node. Nothing special here."
 		
 	# Entrance Node
 	elif entranceFlag == "entrance" and not nextNode:
@@ -135,7 +138,7 @@ while 1:
 		# original's server response (at least it's supposed to be)
 		s.send(decryptedMessage[1])
 		s.close()
-		
+		print "This is the entrance node returning to the client"
 		entranceFlag = ""
 		entranceAddr = ""
 		
@@ -143,7 +146,7 @@ while 1:
 	elif nextNode not in NODES:
 		conn.close()
 		s.close()
-
+        print "This is the exit node."
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((nextNode, TCP_PORT))
 		s.send(decryptedMessage[1])
@@ -156,6 +159,7 @@ while 1:
 		returnMessage = serverResponse
 		print "Return Route: "
 		print returnRoute
+        print "Decrypted Message:"
 		print decryptedMessage
 
 		for x in range(len(returnRoute)):
