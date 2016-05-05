@@ -33,7 +33,9 @@ This is the front-end tool that allows users to send and recieve messages from t
 The client must first contact the directory node in order to recieve a list of potential onion routing nodes and their RSA public keys. The client will randomly select the path through which the message will be sent, and it will encrypt the message in the following manner, where Node 3 is the exit node and Node 1 is the entrance node:
 
 a) AES Encrypt via Node 3's AES Key the following: [message + Node3_IP]
+
 b) RSA Encrypt Node 3's AES Key with Node 3's public RSA key: [Node3_AESKey]
+
 c) Concatenate the two encrypted messages - this is the inner most layer and the process will repeat two more times.
 
 By the end of the encryption scheme, the following is the result:
